@@ -1,0 +1,46 @@
+{
+  "name": "parse-torrent",
+  "description": "Parse a torrent and return an object of keys/values",
+  "version": "0.1.0",
+  "author": "Feross Aboukhadijeh <feross@feross.org> (http://feross.org/)",
+  "bugs": {
+    "url": "https://github.com/feross/parse-torrent/issues"
+  },
+  "dependencies": {
+    "rusha": "^0.7.3"
+  },
+  "devDependencies": {
+    "bncode": "^0.5.2",
+    "tape": "2.x"
+  },
+  "homepage": "https://github.com/feross/parse-torrent",
+  "keywords": [
+    "torrent",
+    "parse torrent",
+    "read torrent",
+    ".torrent",
+    "peer-to-peer",
+    "bittorrent",
+    "bittorrent",
+    "webtorrent"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feross/parse-torrent.git"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "ie/9..latest",
+      "chrome/25..latest",
+      "firefox/20..latest",
+      "safari/6..latest",
+      "opera/15.0..latest"
+    ]
+  }
+}
