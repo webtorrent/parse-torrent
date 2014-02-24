@@ -11,7 +11,8 @@
   },
   "devDependencies": {
     "bncode": "^0.5.2",
-    "tape": "2.x"
+    "brfs": "^1.0.0",
+    "tape": "^2.5.0"
   },
   "homepage": "https://github.com/feross/parse-torrent",
   "keywords": [
