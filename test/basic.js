@@ -1,3 +1,4 @@
+var bncode = require('bncode')
 var fs = require('fs')
 var parseTorrent = require('../')
 var test = require('tape')
@@ -274,5 +275,14 @@ test('parse multiple file torrent', function (t) {
     parseTorrent(pride)
   })
   t.deepEquals(parseTorrent(pride), prideParsed)
+  t.end()
+})
+
+test('parse torrent from object', function (t) {
+  var torrent = bncode.decode(pride)
+  t.doesNotThrow(function () {
+    parseTorrent(torrent)
+  })
+  t.deepEquals(parseTorrent(torrent), prideParsed)
   t.end()
 })
