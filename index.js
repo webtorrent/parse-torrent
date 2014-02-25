@@ -4,11 +4,13 @@ var Rusha = require('rusha') // Fast SHA1 (works in browser)
 
 /**
  * Parse a torrent. Throws an exception if the torrent is missing required fields.
- * @param  {Buffer} torrent
+ * @param  {Buffer|Object} torrent
  * @return {Object}         parsed torrent
  */
 module.exports = function (torrent) {
-  torrent = bncode.decode(torrent)
+  if (Buffer.isBuffer(torrent)) {
+    torrent = bncode.decode(torrent)
+  }
 
   var result = {}
 
