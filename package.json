@@ -7,7 +7,7 @@
     "url": "https://github.com/feross/parse-torrent/issues"
   },
   "dependencies": {
-    "rusha": "git://github.com/feross/rusha"
+    "rusha": "^0.7.4"
   },
   "devDependencies": {
     "bncode": "^0.5.2",
