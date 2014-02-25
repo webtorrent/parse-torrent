@@ -17,7 +17,9 @@ module.exports = function (torrent) {
   result.name = torrent.info.name.toString()
   result.private = !!torrent.info.private
 
-  result.created = new Date(torrent['creation date'] * 1000)
+  if (torrent['creation date'])
+    result.created = new Date(torrent['creation date'] * 1000)
+
   result.announce = (torrent['announce-list'] || [torrent.announce]).map(function (obj) {
     return obj.toString().split(',')[0]
   })
