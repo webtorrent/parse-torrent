@@ -95,4 +95,3 @@ This was originally based on [read-torrent](https://www.npmjs.org/package/read-t
 ## license
 
 MIT. Copyright (c) [Feross Aboukhadijeh](http://feross.org).
-
