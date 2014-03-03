@@ -27,6 +27,7 @@ var leavesParsed = {
       offset: 0
     }
   ],
+  length: 362017,
   pieceLength: 16384,
   lastPieceLength: 1569,
   pieces: [
@@ -69,6 +70,7 @@ var leavesMagnetParsed = {
       offset: 0
     }
   ],
+  length: 362017,
   pieceLength: 16384,
   lastPieceLength: 1569,
   pieces: [
@@ -157,6 +159,7 @@ var prideParsed = {
       offset: 1177526
     }
   ],
+  length: 1482690,
   pieceLength: 16384,
   lastPieceLength: 8130,
   pieces: [

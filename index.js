@@ -26,7 +26,8 @@ module.exports = function (torrent) {
     return obj.toString().split(',')[0]
   })
 
-  result.files = (torrent.info.files || [torrent.info]).map(function (file, i, files) {
+  var files = torrent.info.files || [torrent.info]
+  result.files = files.map(function (file, i) {
     var parts = [].concat(file.name || result.name, file.path || []).map(function (p) {
       return p.toString()
     })
@@ -37,6 +38,8 @@ module.exports = function (torrent) {
       offset: files.slice(0, i).reduce(sumLength, 0)
     }
   })
+
+  result.length = files.reduce(sumLength, 0)
 
   var lastFile = result.files[result.files.length-1]
 

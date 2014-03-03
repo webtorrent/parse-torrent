@@ -58,6 +58,7 @@ The `parsed` torrent object looks like this:
       offset: 0
     }
   ],
+  length: 362017,
   pieceLength: 16384,
   lastPieceLength: 1569,
   pieces: [
