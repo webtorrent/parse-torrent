@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "bncode": "^0.5.2",
-    "rusha": "git://github.com/feross/rusha"
+    "rusha-browserify": "^0.7.3"
   },
   "devDependencies": {
     "brfs": "^1.0.0",
