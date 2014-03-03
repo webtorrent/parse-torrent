@@ -14,7 +14,7 @@ module.exports = function (torrent) {
 
   var result = {}
 
-  result.infoHash = (new Rusha()).digestFromBuffer(bncode.encode(torrent.info))
+  result.infoHash = sha1(bncode.encode(torrent.info))
 
   result.name = torrent.info.name.toString()
   result.private = !!torrent.info.private
@@ -60,4 +60,8 @@ function splitPieces (buf) {
     pieces.push(buf.slice(i, i + 20).toString('hex'))
   }
   return pieces
+}
+
+function sha1 (buf) {
+  return (new Rusha()).digestFromBuffer(buf)
 }
