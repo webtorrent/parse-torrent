@@ -1,6 +1,6 @@
 var bncode = require('bncode')
 var path = require('path')
-var Rusha = require('rusha') // Fast SHA1 (works in browser)
+var Rusha = require('rusha-browserify') // Fast SHA1 (works in browser)
 
 /**
  * Parse a torrent. Throws an exception if the torrent is missing required fields.
