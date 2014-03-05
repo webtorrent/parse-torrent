@@ -12,8 +12,23 @@ module.exports = function (torrent) {
     torrent = bncode.decode(torrent)
   }
 
-  var result = {}
+  // sanity check
+  ensure(torrent.info, 'info')
+  ensure(torrent.info.name, 'info.name')
+  ensure(torrent['announce-list'] || torrent.announce, 'announce-list/announce')
+  ensure(torrent.info['piece length'], 'info[\'piece length\']')
+  ensure(torrent.info.pieces, 'info.pieces')
 
+  if (torrent.info.files) {
+    torrent.info.files.forEach(function (file) {
+      ensure(file.length, 'info.files[0].length')
+      ensure(file.path, 'info.files[0].path')
+    })
+  } else {
+    ensure(torrent.info.length, 'info.length')
+  }
+
+  var result = {}
   result.infoHash = sha1(bncode.encode(torrent.info))
 
   result.name = torrent.info.name.toString()
@@ -64,4 +79,10 @@ function splitPieces (buf) {
 
 function sha1 (buf) {
   return (new Rusha()).digestFromBuffer(buf)
+}
+
+function ensure (bool, fieldName) {
+  if (!bool) {
+    throw new Error('Torrent is missing required field: ' + fieldName)
+  }
 }
