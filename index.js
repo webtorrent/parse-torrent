@@ -29,7 +29,9 @@ module.exports = function (torrent) {
   }
 
   var result = {}
-  result.infoHash = sha1(bncode.encode(torrent.info))
+  result.info = torrent.info
+  result.infoBuffer = bncode.encode(torrent.info)
+  result.infoHash = sha1(result.infoBuffer)
 
   result.name = torrent.info.name.toString()
   result.private = !!torrent.info.private
