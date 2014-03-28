@@ -3,6 +3,7 @@
   "description": "Parse a torrent and return an object of keys/values",
   "version": "0.7.0",
   "author": "Feross Aboukhadijeh <feross@feross.org> (http://feross.org/)",
+  "bin": "./bin/cmd.js",
   "bugs": {
     "url": "https://github.com/feross/parse-torrent/issues"
   },
