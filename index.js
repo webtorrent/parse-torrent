@@ -42,6 +42,11 @@ module.exports = function (torrent) {
   result.announce = (torrent['announce-list'] || [torrent.announce]).map(function (obj) {
     return obj.toString().split(',')[0]
   })
+  result.announceList = (torrent['announce-list'] || [[torrent.announce]]).map(function (urls) {
+    return urls.map(function(url) {
+      return url.toString()
+    })
+  })
 
   var files = torrent.info.files || [torrent.info]
   result.files = files.map(function (file, i) {

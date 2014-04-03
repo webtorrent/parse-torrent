@@ -19,6 +19,13 @@ var leavesParsed = {
     'udp://tracker.publicbt.com:80',
     'udp://fr33domtracker.h33t.com:3310/announce'
   ],
+  announceList: [
+    ['http://tracker.thepiratebay.org/announce'],
+    ['udp://tracker.openbittorrent.com:80'],
+    ['udp://tracker.ccc.de:80'],
+    ['udp://tracker.publicbt.com:80'],
+    ['udp://fr33domtracker.h33t.com:3310/announce', 'http://tracker.bittorrent.am/announce']
+  ],
   files: [
     {
       path: 'Leaves of Grass by Walt Whitman.epub',
@@ -69,6 +76,7 @@ var leavesMagnetParsed = {
   name: 'Leaves of Grass by Walt Whitman.epub',
   private: false,
   announce: [],
+  announceList: [],
   files: [
     {
       path: 'Leaves of Grass by Walt Whitman.epub',
@@ -152,6 +160,40 @@ var prideParsed = {
     'http://tracker.yify-torrents.com/announce',
     'http://announce.torrentsmd.com:6969/announce',
     'http://fr33domtracker.h33t.com:3310/announce'
+  ],
+  announceList: [
+    ['http://tracker.thepiratebay.org/announce'],
+    ['udp://tracker.openbittorrent.com:80'],
+    ['udp://tracker.ccc.de:80'],
+    ['udp://tracker.publicbt.com:80'],
+    ['http://tracker.tfile.me/announce'],
+    ['http://tracker.marshyonline.net/announce'],
+    ['http://tracker.ex.ua/announce'],
+    ['http://i.bandito.org/announce'],
+    ['http://greenlietracker.appspot.com/announce'],
+    ['http://exodus.desync.com:6969/announce'],
+    ['http://calu-atrack.appspot.com/announce'],
+    ['http://calu-atrack.appspot.com.nyud.net/announce'],
+    ['http://bt.poletracker.org:2710/announce'],
+    ['http://bigfoot1942.sektori.org:6969/announce'],
+    ['http://announce.opensharing.org:2710/announce'],
+    ['http://94.228.192.98.nyud.net/announce'],
+    ['http://bt.careland.com.cn:6969/announce'],
+    ['http://e180.php5.cz/announce'],
+    ['http://beta.mytracker.me:6969/announce'],
+    ['http://tracker.metin2.com.br:6969/announce'],
+    ['http://tracker1.wasabii.com.tw:6969/announce'],
+    ['http://retracker.perm.ertelecom.ru/announce'],
+    ['http://fr33dom.h33t.com:3310/announce'],
+    ['http://exodus.desync.com/announce'],
+    ['http://bt.eutorrents.com/announce.php'],
+    ['http://retracker.hq.ertelecom.ru/announce'],
+    ['http://announce.torrentsmd.com:8080/announce'],
+    ['http://announce.torrentsmd.com:8080/announce.php'],
+    ['http://www.h33t.com:3310/announce'],
+    ['http://tracker.yify-torrents.com/announce'],
+    ['http://announce.torrentsmd.com:6969/announce'],
+    ['http://fr33domtracker.h33t.com:3310/announce']
   ],
   files: [
     {
