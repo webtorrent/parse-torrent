@@ -39,14 +39,13 @@ module.exports = function (torrent) {
   if (torrent['creation date'])
     result.created = new Date(torrent['creation date'] * 1000)
 
-  result.announce = (torrent['announce-list'] || [torrent.announce]).map(function (obj) {
-    return obj.toString().split(',')[0]
-  })
   result.announceList = (torrent['announce-list'] || [[torrent.announce]]).map(function (urls) {
     return urls.map(function (url) {
       return url.toString()
     })
   })
+
+  result.announce = [].concat.apply([], result.announceList)
 
   var files = torrent.info.files || [torrent.info]
   result.files = files.map(function (file, i) {

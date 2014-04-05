@@ -17,7 +17,8 @@ var leavesParsed = {
     'udp://tracker.openbittorrent.com:80',
     'udp://tracker.ccc.de:80',
     'udp://tracker.publicbt.com:80',
-    'udp://fr33domtracker.h33t.com:3310/announce'
+    'udp://fr33domtracker.h33t.com:3310/announce',
+    'http://tracker.bittorrent.am/announce'
   ],
   announceList: [
     ['http://tracker.thepiratebay.org/announce'],
