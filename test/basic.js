@@ -37,7 +37,7 @@ var leavesParsed = {
   length: 362017,
   pieceLength: 16384,
   lastPieceLength: 1569,
-  pieces: [
+  pieces: [
     '1f9c3f59beec079715ec53324bde8569e4a0b4eb',
     'ec42307d4ce5557b5d3964c5ef55d354cf4a6ecc',
     '7bf1bcaf79d11fa5e0be06593c8faafc0c2ba2cf',
