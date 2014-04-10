@@ -1,8 +1,4 @@
-# parse-torrent
-[![Build Status](http://img.shields.io/travis/feross/parse-torrent.svg)](https://travis-ci.org/feross/parse-torrent)
-[![NPM Version](http://img.shields.io/npm/v/parse-torrent.svg)](https://npmjs.org/package/parse-torrent)
-[![NPM](http://img.shields.io/npm/dm/parse-torrent.svg)](https://npmjs.org/package/parse-torrent)
-[![Gittip](http://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
+# parse-torrent [![travis](https://img.shields.io/travis/feross/parse-torrent.svg)](https://travis-ci.org/feross/parse-torrent) [![npm](https://img.shields.io/npm/v/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![downloads](https://img.shields.io/npm/dm/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
 
 [![browser support](https://ci.testling.com/feross/parse-torrent.png)](https://ci.testling.com/feross/parse-torrent)
 
