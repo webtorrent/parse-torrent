@@ -23,4 +23,4 @@ try {
 delete parsedTorrent.info
 delete parsedTorrent.infoBuffer
 
-console.dir(parsedTorrent)
+console.log(JSON.stringify(parsedTorrent, undefined, 2))
