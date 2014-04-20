@@ -21,7 +21,7 @@ module.exports = function (torrent) {
 
   if (torrent.info.files) {
     torrent.info.files.forEach(function (file) {
-      ensure(file.length, 'info.files[0].length')
+      ensure(typeof file.length === 'number', 'info.files[0].length')
       ensure(file.path, 'info.files[0].path')
     })
   } else {
