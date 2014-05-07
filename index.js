@@ -5,7 +5,7 @@ var Rusha = require('rusha-browserify') // Fast SHA1 (works in browser)
 /**
  * Parse a torrent. Throws an exception if the torrent is missing required fields.
  * @param  {Buffer|Object} torrent
- * @return {Object}         parsed torrent
+ * @return {Object}        parsed torrent
  */
 module.exports = function (torrent) {
   if (Buffer.isBuffer(torrent)) {
@@ -15,9 +15,11 @@ module.exports = function (torrent) {
   // sanity check
   ensure(torrent.info, 'info')
   ensure(torrent.info.name, 'info.name')
-  ensure(torrent['announce-list'] || torrent.announce, 'announce-list/announce')
   ensure(torrent.info['piece length'], 'info[\'piece length\']')
   ensure(torrent.info.pieces, 'info.pieces')
+  
+  // note: announce-list/announce will be missing from torrents created via magnet+ut_metadata
+  //ensure(torrent['announce-list'] || torrent.announce, 'announce-list/announce')
 
   if (torrent.info.files) {
     torrent.info.files.forEach(function (file) {
@@ -39,7 +41,16 @@ module.exports = function (torrent) {
   if (torrent['creation date'])
     result.created = new Date(torrent['creation date'] * 1000)
 
-  result.announceList = (torrent['announce-list'] || [[torrent.announce]]).map(function (urls) {
+  var announce = torrent['announce-list']
+  if (!announce) {
+    if (torrent.announce) {
+      announce = [[torrent.announce]]
+    } else {
+      announce = [[]]
+    }
+  }
+  
+  result.announceList = announce.map(function (urls) {
     return urls.map(function (url) {
       return url.toString()
     })
