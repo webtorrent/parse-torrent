@@ -17,7 +17,7 @@ module.exports = function (torrent) {
   ensure(torrent.info.name, 'info.name')
   ensure(torrent.info['piece length'], 'info[\'piece length\']')
   ensure(torrent.info.pieces, 'info.pieces')
-  
+
   // note: announce-list/announce will be missing from torrents created via magnet+ut_metadata
   //ensure(torrent['announce-list'] || torrent.announce, 'announce-list/announce')
 
@@ -46,10 +46,10 @@ module.exports = function (torrent) {
     if (torrent.announce) {
       announce = [[torrent.announce]]
     } else {
-      announce = [[]]
+      announce = []
     }
   }
-  
+
   result.announceList = announce.map(function (urls) {
     return urls.map(function (url) {
       return url.toString()
