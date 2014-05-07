@@ -18,9 +18,6 @@ module.exports = function (torrent) {
   ensure(torrent.info['piece length'], 'info[\'piece length\']')
   ensure(torrent.info.pieces, 'info.pieces')
 
-  // note: announce-list/announce will be missing from torrents created via magnet+ut_metadata
-  //ensure(torrent['announce-list'] || torrent.announce, 'announce-list/announce')
-
   if (torrent.info.files) {
     torrent.info.files.forEach(function (file) {
       ensure(typeof file.length === 'number', 'info.files[0].length')
@@ -41,6 +38,7 @@ module.exports = function (torrent) {
   if (torrent['creation date'])
     result.created = new Date(torrent['creation date'] * 1000)
 
+  // announce/announce-list may be missing if metadata fetched via ut_metadata extension
   var announce = torrent['announce-list']
   if (!announce) {
     if (torrent.announce) {
