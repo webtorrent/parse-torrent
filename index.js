@@ -1,3 +1,6 @@
+module.exports = parseTorrent
+module.exports.toBuffer = toBuffer
+
 var bncode = require('bncode')
 var path = require('path')
 var Rusha = require('rusha-browserify') // Fast SHA1 (works in browser)
@@ -7,7 +10,7 @@ var Rusha = require('rusha-browserify') // Fast SHA1 (works in browser)
  * @param  {Buffer|Object} torrent
  * @return {Object}        parsed torrent
  */
-module.exports = function (torrent) {
+function parseTorrent (torrent) {
   if (Buffer.isBuffer(torrent)) {
     torrent = bncode.decode(torrent)
   }
@@ -71,7 +74,7 @@ module.exports = function (torrent) {
 
   result.length = files.reduce(sumLength, 0)
 
-  var lastFile = result.files[result.files.length-1]
+  var lastFile = result.files[result.files.length - 1]
 
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
@@ -79,6 +82,30 @@ module.exports = function (torrent) {
 
   return result
 }
+
+/**
+ * Convert a parsed torrent object back into a .torrent file buffer.
+ * @param  {Object} parsed parsed torrent
+ * @return {Buffer}
+ */
+function toBuffer (parsed) {
+  var torrent = {
+    info: parsed.info
+  }
+
+  torrent['announce-list'] = parsed.announceList.map(function (urls) {
+    return urls.map(function (url) {
+      return new Buffer(url, 'utf8')
+    })
+  })
+
+  if (parsed.created) {
+    torrent['creation date'] = (parsed.created.getTime() / 1000) | 0
+  }
+
+  return bncode.encode(torrent)
+}
+
 
 function sumLength (sum, file) {
   return sum + file.length
