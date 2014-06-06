@@ -13,6 +13,7 @@ test('toBuffer', function (t) {
   t.deepEqual(parsedTorrent.infoBuffer, doubleParsedTorrent.infoBuffer)
   t.equal(parsedTorrent.created.getDate(), doubleParsedTorrent.created.getDate())
   t.deepEqual(parsedTorrent.announce, doubleParsedTorrent.announce)
+  t.deepEqual(parsedTorrent.announceList, doubleParsedTorrent.announceList)
 
   t.end()
 })

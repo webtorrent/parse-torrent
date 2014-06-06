@@ -93,11 +93,17 @@ function toBuffer (parsed) {
     info: parsed.info
   }
 
-  torrent['announce-list'] = parsed.announceList.map(function (urls) {
-    return urls.map(function (url) {
-      return new Buffer(url, 'utf8')
+  if (parsed.announceList) {
+    torrent['announce-list'] = parsed.announceList.map(function (urls) {
+      return urls.map(function (url) {
+        url = new Buffer(url, 'utf8')
+        if (!torrent.announce) {
+          torrent.announce = url
+        }
+        return url
+      })
     })
-  })
+  }
 
   if (parsed.created) {
     torrent['creation date'] = (parsed.created.getTime() / 1000) | 0
