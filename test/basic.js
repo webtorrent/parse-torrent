@@ -1,4 +1,4 @@
-var bncode = require('bncode')
+var bencode = require('bencode')
 var fs = require('fs')
 var parseTorrent = require('../')
 var test = require('tape')
@@ -359,7 +359,7 @@ test('parse multiple file torrent', function (t) {
 })
 
 test('parse torrent from object', function (t) {
-  var torrent = bncode.decode(pride)
+  var torrent = bencode.decode(pride)
   t.doesNotThrow(function () {
     parseTorrent(torrent)
   })

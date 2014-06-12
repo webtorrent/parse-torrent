@@ -1,7 +1,7 @@
 module.exports = parseTorrent
 module.exports.toBuffer = toBuffer
 
-var bncode = require('bncode')
+var bencode = require('bencode')
 var path = require('path')
 var Rusha = require('rusha-browserify') // Fast SHA1 (works in browser)
 
@@ -12,7 +12,7 @@ var Rusha = require('rusha-browserify') // Fast SHA1 (works in browser)
  */
 function parseTorrent (torrent) {
   if (Buffer.isBuffer(torrent)) {
-    torrent = bncode.decode(torrent)
+    torrent = bencode.decode(torrent)
   }
 
   // sanity check
@@ -32,7 +32,7 @@ function parseTorrent (torrent) {
 
   var result = {}
   result.info = torrent.info
-  result.infoBuffer = bncode.encode(torrent.info)
+  result.infoBuffer = bencode.encode(torrent.info)
   result.infoHash = sha1(result.infoBuffer)
 
   result.name = torrent.info.name.toString()
@@ -109,7 +109,7 @@ function toBuffer (parsed) {
     torrent['creation date'] = (parsed.created.getTime() / 1000) | 0
   }
 
-  return bncode.encode(torrent)
+  return bencode.encode(torrent)
 }
 
 

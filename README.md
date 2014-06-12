@@ -5,7 +5,7 @@
 [![browser support](https://ci.testling.com/feross/parse-torrent.png)](https://ci.testling.com/feross/parse-torrent)
 
 
-Also works in the browser with [browserify](http://browserify.org/)! Works well with the buffers returned from [bncode](https://www.npmjs.org/package/bncode).
+Also works in the browser with [browserify](http://browserify.org/)! Works well with the buffers returned from [bencode](https://www.npmjs.org/package/bencode).
 
 This module is used by [WebTorrent](http://webtorrent.io).
 
