@@ -8,8 +8,7 @@
     "url": "https://github.com/feross/parse-torrent/issues"
   },
   "dependencies": {
-    "bencode": "^0.6.0",
-    "rusha-browserify": "^0.7.3"
+    "bencode": "^0.6.0"
   },
   "devDependencies": {
     "brfs": "^1.0.0",

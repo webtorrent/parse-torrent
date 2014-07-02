@@ -2,8 +2,8 @@ module.exports = parseTorrent
 module.exports.toBuffer = toBuffer
 
 var bencode = require('bencode')
+var crypto = require('crypto')
 var path = require('path')
-var Rusha = require('rusha-browserify') // Fast SHA1 (works in browser)
 
 /**
  * Parse a torrent. Throws an exception if the torrent is missing required fields.
@@ -126,7 +126,7 @@ function splitPieces (buf) {
 }
 
 function sha1 (buf) {
-  return (new Rusha()).digestFromBuffer(buf)
+  return crypto.createHash('sha1').update(buf).digest('hex')
 }
 
 function ensure (bool, fieldName) {
