@@ -93,6 +93,10 @@ function toBuffer (parsed) {
     info: parsed.info
   }
 
+  if (parsed.announce && parsed.announce[0]) {
+    torrent.announce = parsed.announce[0]
+  }
+
   if (parsed.announceList) {
     torrent['announce-list'] = parsed.announceList.map(function (urls) {
       return urls.map(function (url) {
@@ -108,7 +112,6 @@ function toBuffer (parsed) {
   if (parsed.created) {
     torrent['creation date'] = (parsed.created.getTime() / 1000) | 0
   }
-
   return bencode.encode(torrent)
 }
 
