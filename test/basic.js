@@ -27,6 +27,7 @@ var leavesParsed = {
     ['udp://tracker.publicbt.com:80'],
     ['udp://fr33domtracker.h33t.com:3310/announce', 'http://tracker.bittorrent.am/announce']
   ],
+  urlList: [],
   files: [
     {
       path: 'Leaves of Grass by Walt Whitman.epub',
@@ -78,6 +79,7 @@ var leavesMagnetParsed = {
   private: false,
   announce: [],
   announceList: [],
+  urlList: [],
   files: [
     {
       path: 'Leaves of Grass by Walt Whitman.epub',
@@ -196,6 +198,7 @@ var prideParsed = {
     ['http://announce.torrentsmd.com:6969/announce'],
     ['http://fr33domtracker.h33t.com:3310/announce']
   ],
+  urlList: [],
   files: [
     {
       path: 'PRIDE AND PREJUDICE  - Jane Austen/Pride_and_Prejudice.pdf',

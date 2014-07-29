@@ -59,6 +59,11 @@ function parseTorrent (torrent) {
 
   result.announce = [].concat.apply([], result.announceList)
 
+  // handle url-list (BEP19 / web seeding)
+  result.urlList = (torrent['url-list'] || []).map(function (url) {
+    return url.toString()
+  })
+
   var files = torrent.info.files || [torrent.info]
   result.files = files.map(function (file, i) {
     var parts = [].concat(file.name || result.name, file.path || []).map(function (p) {
