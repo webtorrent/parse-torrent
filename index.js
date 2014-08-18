@@ -7,14 +7,7 @@ var parseTorrentFile = require('parse-torrent-file')
  * @return {string} info hash (hex string)
  */
 
-module.exports = function (torrentId) {
-  var p = parseTorrent(torrentId)
-  console.log(p)
-  return p
-}
-
-function parseTorrent (torrentId) {
-  console.log(torrentId)
+module.exports = function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /magnet:/.test(torrentId)) {
     // magnet uri (string)
     return magnet(torrentId)
