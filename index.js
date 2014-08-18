@@ -36,3 +36,5 @@ module.exports = function parseTorrent (torrentId) {
     return null
   }
 }
+
+module.exports.toBuffer = parseTorrentFile.toBuffer
