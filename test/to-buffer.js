@@ -1,4 +1,3 @@
-var bencode = require('bencode')
 var fs = require('fs')
 var parseTorrent = require('../')
 var test = require('tape')

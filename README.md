@@ -1,6 +1,6 @@
 # parse-torrent [![travis](https://img.shields.io/travis/feross/parse-torrent.svg)](https://travis-ci.org/feross/parse-torrent) [![npm](https://img.shields.io/npm/v/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![downloads](https://img.shields.io/npm/dm/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
 
-#### Parse a torrent file and return an object of keys/values.
+#### Parse a .torrent file and return an object of keys/values
 
 [![browser support](https://ci.testling.com/feross/parse-torrent.png)](https://ci.testling.com/feross/parse-torrent)
 
