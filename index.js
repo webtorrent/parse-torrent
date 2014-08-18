@@ -2,11 +2,10 @@ var magnet = require('magnet-uri')
 var parseTorrentFile = require('parse-torrent-file')
 
 /**
- * Given a torrentId, return a hex string.
- * @param  {string|Buffer} torrentId magnet uri, torrent file, infohash, or parsed torrent
- * @return {string} info hash (hex string)
+ * Parse a torrent identifier (magnet uri, .torrent file, info hash)
+ * @param  {string|Buffer|Object} torrentId
+ * @return {Object}
  */
-
 module.exports = function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /magnet:/.test(torrentId)) {
     // magnet uri (string)
