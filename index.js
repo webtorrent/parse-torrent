@@ -41,6 +41,9 @@ function parseTorrent (torrent) {
   if (torrent['creation date'])
     result.created = new Date(torrent['creation date'] * 1000)
 
+  if (Buffer.isBuffer(torrent.comment))
+    result.comment = torrent.comment.toString()
+
   // announce/announce-list may be missing if metadata fetched via ut_metadata extension
   var announce = torrent['announce-list']
   if (!announce) {
@@ -138,7 +141,5 @@ function sha1 (buf) {
 }
 
 function ensure (bool, fieldName) {
-  if (!bool) {
-    throw new Error('Torrent is missing required field: ' + fieldName)
-  }
+  if (!bool) throw new Error('Torrent is missing required field: ' + fieldName)
 }

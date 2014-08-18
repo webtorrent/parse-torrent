@@ -27,6 +27,7 @@ var leavesParsed = {
     ['udp://tracker.publicbt.com:80'],
     ['udp://fr33domtracker.h33t.com:3310/announce', 'http://tracker.bittorrent.am/announce']
   ],
+  comment: 'Downloaded from http://TheTorrent.org',
   urlList: [],
   files: [
     {
@@ -198,6 +199,7 @@ var prideParsed = {
     ['http://announce.torrentsmd.com:6969/announce'],
     ['http://fr33domtracker.h33t.com:3310/announce']
   ],
+  comment: 'Torrent downloaded from http://thepiratebay.sx',
   urlList: [],
   files: [
     {
