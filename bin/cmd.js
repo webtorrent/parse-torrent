@@ -4,7 +4,7 @@ var fs = require('fs')
 var parseTorrent = require('../')
 
 function usage () {
-  console.error('Usage: parse-torrent /path/to/torrent')
+  console.error('Usage: parse-torrent-file /path/to/torrent')
 }
 
 var torrentPath = process.argv[2]

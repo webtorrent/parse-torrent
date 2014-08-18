@@ -1,9 +1,8 @@
-# parse-torrent [![travis](https://img.shields.io/travis/feross/parse-torrent.svg)](https://travis-ci.org/feross/parse-torrent) [![npm](https://img.shields.io/npm/v/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![downloads](https://img.shields.io/npm/dm/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
+# parse-torrent-file [![travis](https://img.shields.io/travis/feross/parse-torrent-file.svg)](https://travis-ci.org/feross/parse-torrent-file) [![npm](https://img.shields.io/npm/v/parse-torrent-file.svg)](https://npmjs.org/package/parse-torrent-file) [![downloads](https://img.shields.io/npm/dm/parse-torrent-file.svg)](https://npmjs.org/package/parse-torrent-file) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
 
 #### Parse a .torrent file and return an object of keys/values
 
-[![browser support](https://ci.testling.com/feross/parse-torrent.png)](https://ci.testling.com/feross/parse-torrent)
-
+[![browser support](https://ci.testling.com/feross/parse-torrent-file.png)](https://ci.testling.com/feross/parse-torrent-file)
 
 Also works in the browser with [browserify](http://browserify.org/)! Works well with the buffers returned from [bencode](https://www.npmjs.org/package/bencode).
 
@@ -12,18 +11,18 @@ This module is used by [WebTorrent](http://webtorrent.io).
 ## install
 
 ```
-npm install parse-torrent
+npm install parse-torrent-file
 ```
 
 ## usage
 
 ```js
-var parseTorrent = require('parse-torrent')
+var parseTorrentFile = require('parse-torrent-file')
 
 var torrent = fs.readFileSync(__dirname + '/torrents/leaves.torrent')
 var parsed
 try {
-  parsed = parseTorrent(torrent)
+  parsed = parseTorrentFile(torrent)
 } catch (e) {
   // the torrent file was corrupt
   console.error(e)
@@ -106,16 +105,16 @@ The `parsed` torrent object looks like this:
 }
 ```
 
-To convert a parsed torrent back into a .torrent file buffer, call `parseTorrent.toBuffer`.
+To convert a parsed torrent back into a .torrent file buffer, call `parseTorrentFile.toBuffer`.
 
 ```js
-var parseTorrent = require('parse-torrent')
+var parseTorrentFile = require('parse-torrent-file')
 
 // parse a torrent
-var parsed = parseTorrent(/* some buffer */)
+var parsed = parseTorrentFile(/* some buffer */)
 
 // convert parsed torrent back to a buffer
-var buf = parseTorrent.toBuffer(parsed)
+var buf = parseTorrentFile.toBuffer(parsed)
 ```
 
 ## credit
