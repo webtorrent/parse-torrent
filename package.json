@@ -23,7 +23,6 @@
     ".torrent",
     "peer-to-peer",
     "bittorrent",
-    "bittorrent",
     "webtorrent"
   ],
   "license": "MIT",

@@ -5,19 +5,27 @@ var parseTorrent = require('../')
 
 function usage () {
   console.error('Usage: parse-torrent /path/to/torrent')
+  console.error('       parse-torrent magnet_uri')
 }
 
-var torrentPath = process.argv[2]
+var torrentId = process.argv[2]
 
-if (!torrentPath) {
-  return usage()
-}
-
-try {
-  var parsedTorrent = parseTorrent(fs.readFileSync(torrentPath))
-} catch (err) {
-  console.error(err.message + '\n')
+if (!torrentId) {
   usage()
+  process.exit(-1)
+}
+
+var parsedTorrent
+try {
+  parsedTorrent = parseTorrent(fs.readFileSync(torrentId))
+} catch (err) {
+  parsedTorrent = parseTorrent(torrentId)
+}
+
+if (!parsedTorrent) {
+  console.error('Invalid torrent identifier\n')
+  usage()
+  process.exit(-1)
 }
 
 delete parsedTorrent.info
