@@ -8,6 +8,13 @@ function usage () {
   console.error('       parse-torrent magnet_uri')
 }
 
+function error (err) {
+  console.error('Invalid torrent identifier\n')
+  if (err) console.error(err)
+  usage()
+  process.exit(-1)
+}
+
 var torrentId = process.argv[2]
 
 if (!torrentId) {
@@ -15,18 +22,18 @@ if (!torrentId) {
   process.exit(-1)
 }
 
-var parsedTorrent
-try {
-  parsedTorrent = parseTorrent(fs.readFileSync(torrentId))
-} catch (err) {
-  parsedTorrent = parseTorrent(torrentId)
+var parsedTorrent = parseTorrent(torrentId)
+if (!parsedTorrent || !parsedTorrent.infoHash) {
+  try {
+    parsedTorrent = parseTorrent(fs.readFileSync(torrentId))
+  } catch (err) {
+    error(err)
+  }
 }
 
-if (!parsedTorrent) {
-  console.error('Invalid torrent identifier\n')
-  usage()
-  process.exit(-1)
-}
+console.log('parsedTorrent:', parsedTorrent)
+
+if (!parsedTorrent) error()
 
 delete parsedTorrent.info
 delete parsedTorrent.infoBuffer
