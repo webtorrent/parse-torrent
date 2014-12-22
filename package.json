@@ -8,7 +8,7 @@
     "url": "https://github.com/feross/parse-torrent/issues"
   },
   "dependencies": {
-    "magnet-uri": "^3.0.0",
+    "magnet-uri": "^4.0.0",
     "parse-torrent-file": "^1.8.0"
   },
   "devDependencies": {
