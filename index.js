@@ -36,4 +36,5 @@ module.exports = function parseTorrent (torrentId) {
   }
 }
 
-module.exports.toBuffer = parseTorrentFile.toBuffer
+module.exports.toMagnetURI = magnet.encode
+module.exports.toTorrentFile = parseTorrentFile.encode
