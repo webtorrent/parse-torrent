@@ -1,18 +1,20 @@
 # parse-torrent [![travis](https://img.shields.io/travis/feross/parse-torrent.svg)](https://travis-ci.org/feross/parse-torrent) [![npm](https://img.shields.io/npm/v/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![downloads](https://img.shields.io/npm/dm/parse-torrent.svg)](https://npmjs.org/package/parse-torrent) [![gittip](https://img.shields.io/gittip/feross.svg)](https://www.gittip.com/feross/)
 
-#### Parse a torrent identifier (magnet uri, .torrent file, info hash)
+### Parse a torrent identifier (magnet uri, .torrent file, info hash)
 
 [![browser support](https://ci.testling.com/feross/parse-torrent.png)](https://ci.testling.com/feross/parse-torrent)
 
 Works in node and the browser (with [browserify](http://browserify.org/)). This module is used by [WebTorrent](http://webtorrent.io)!
 
-### install
+## install
 
 ```
 npm install parse-torrent
 ```
 
-### usage
+## usage
+
+### parse
 
 The return value of `parseTorrent` will contain as much info as possible about the
 torrent. The only property that is guaranteed to be present is `infoHash`.
@@ -109,13 +111,28 @@ parseTorrent(fs.readFileSync(__dirname + '/torrents/leaves.torrent'))
 //      'c698de9b0dad92980906c026d8c1408fa08fe4ec' ] }
 ```
 
-### before version 2
+### encode
 
-Before `v2.0.0`, this package only supported parsing .torrent files. Now it supports
-parsing a larger variety of torrent identifiers. If you want the previous behavior, use
-[parse-torrent-file](https://github.com/feross/parse-torrent-file).
+The reverse works too. To convert an object of keys/value to a magnet uri or .torrent file
+buffer, use `toMagnetURI` and `toTorrentFile`.
 
+```js
+var parseTorrent = require('parse-torrent')
 
-### license
+var uri = parseTorrent.toMagnetURI({
+  infoHash: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'
+})
+console.log(uri) // 'magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'
+
+var buf = parseTorrent.toTorrentFile({
+  info: {
+    /* ... */
+  }
+})
+console.log(buf)
+
+```
+
+## license
 
 MIT. Copyright (c) [Feross Aboukhadijeh](http://feross.org).
