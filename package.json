@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "brfs": "^1.0.0",
-    "tape": "^2.5.0"
+    "tape": "^3.0.3",
+    "zuul": "^1.16.3"
   },
   "homepage": "https://github.com/feross/parse-torrent",
   "keywords": [
@@ -32,16 +33,12 @@
     "url": "git://github.com/feross/parse-torrent.git"
   },
   "scripts": {
-    "test": "tape test/*.js"
+    "test": "npm run test-node && npm run test-browser",
+    "test-browser": "zuul -- test/*.js",
+    "test-browser-local": "zuul --local -- test/*.js",
+    "test-node": "tape test/*.js"
   },
   "testling": {
-    "files": "test/*.js",
-    "browsers": [
-      "ie/10..latest",
-      "chrome/25..latest",
-      "firefox/20..latest",
-      "safari/6..latest",
-      "opera/15.0..latest"
-    ]
+    "files": "test/*.js"
   }
 }

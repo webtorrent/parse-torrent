@@ -2,7 +2,7 @@
 
 ### Parse a torrent identifier (magnet uri, .torrent file, info hash)
 
-[![browser support](https://ci.testling.com/feross/parse-torrent.png)](https://ci.testling.com/feross/parse-torrent)
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/parse-torrent.svg)](https://saucelabs.com/u/parse-torrent)
 
 Works in node and the browser (with [browserify](http://browserify.org/)). This module is used by [WebTorrent](http://webtorrent.io)!
 
