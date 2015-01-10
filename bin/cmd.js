@@ -31,8 +31,6 @@ if (!parsedTorrent || !parsedTorrent.infoHash) {
   }
 }
 
-console.log('parsedTorrent:', parsedTorrent)
-
 if (!parsedTorrent) error()
 
 delete parsedTorrent.info
