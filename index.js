@@ -7,32 +7,24 @@ var parseTorrentFile = require('parse-torrent-file')
  * @return {Object}
  */
 module.exports = function parseTorrent (torrentId) {
+  var len = torrentId && torrentId.length
   if (typeof torrentId === 'string' && /magnet:/.test(torrentId)) {
     // magnet uri (string)
     return magnet(torrentId)
-  } else if (typeof torrentId === 'string' &&
-      (torrentId.length === 40 || torrentId.length === 32)) {
+  } else if (typeof torrentId === 'string' && (len === 40 || len === 32)) {
     // info hash (hex/base-32 string)
-    var info = magnet('magnet:?xt=urn:btih:' + torrentId)
-    if (info)
-      return { infoHash: info.infoHash }
-    else
-      return null
-  } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
+    return magnet('magnet:?xt=urn:btih:' + torrentId)
+  } else if (Buffer.isBuffer(torrentId) && len === 20) {
     // info hash (buffer)
     return { infoHash: torrentId.toString('hex') }
   } else if (Buffer.isBuffer(torrentId)) {
     // .torrent file (buffer)
-    try {
-      return parseTorrentFile(torrentId)
-    } catch (err) {
-      return null
-    }
+    return parseTorrentFile(torrentId) // might throw
   } else if (torrentId && torrentId.infoHash) {
-    // parsed torrent (from `parse-torrent` or `magnet-uri` module)
+    // parsed torrent (from `parse-torrent`, `parse-torrent-file`, or `magnet-uri`)
     return torrentId
   } else {
-    return null
+    throw new Error('Invalid torrent identifier')
   }
 }
 

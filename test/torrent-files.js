@@ -90,8 +90,10 @@ test('parse multiple file torrent', function (t) {
   t.end()
 })
 
-test('null returned torrent file is missing `name` field', function (t) {
-  t.equal(null, parseTorrent(leavesCorrupt))
+test('torrent file missing `name` field throws', function (t) {
+  t.throws(function () {
+    parseTorrent(leavesCorrupt)
+  })
   t.end()
 })
 

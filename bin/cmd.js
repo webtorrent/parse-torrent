@@ -9,29 +9,35 @@ function usage () {
 }
 
 function error (err) {
-  console.error('Invalid torrent identifier\n')
-  if (err) console.error(err)
+  if (err) console.error(err.message)
   usage()
-  process.exit(-1)
 }
 
 var torrentId = process.argv[2]
 
 if (!torrentId) {
   usage()
-  process.exit(-1)
+  process.exit(1)
 }
 
-var parsedTorrent = parseTorrent(torrentId)
-if (!parsedTorrent || !parsedTorrent.infoHash) {
+var parsedTorrent
+try {
+  parsedTorrent = parseTorrent(torrentId)
+} catch (err1) {
+  var file
   try {
-    parsedTorrent = parseTorrent(fs.readFileSync(torrentId))
-  } catch (err) {
-    error(err)
+    file = fs.readFileSync(torrentId)
+  } catch (err2) {
+    error(err1)
+    process.exit(1)
+  }
+  try {
+    parsedTorrent = parseTorrent(file)
+  } catch (err2) {
+    error(err2)
+    process.exit(1)
   }
 }
-
-if (!parsedTorrent) error()
 
 delete parsedTorrent.info
 delete parsedTorrent.infoBuffer
