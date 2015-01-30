@@ -1,7 +1,7 @@
 {
   "name": "parse-torrent",
   "description": "Parse a torrent identifier (magnet uri, .torrent file, info hash)",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "author": "Feross Aboukhadijeh <feross@feross.org> (http://feross.org/)",
   "bin": "./bin/cmd.js",
   "bugs": {
