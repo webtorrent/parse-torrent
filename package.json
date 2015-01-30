@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "brfs": "^1.0.0",
+    "standard": "^2.2.1",
     "tape": "^3.0.3",
     "zuul": "^1.16.3"
   },
@@ -33,7 +34,7 @@
     "url": "git://github.com/feross/parse-torrent.git"
   },
   "scripts": {
-    "test": "npm run test-node && npm run test-browser",
+    "test": "standard && npm run test-node && npm run test-browser",
     "test-browser": "zuul -- test/*.js",
     "test-browser-local": "zuul --local -- test/*.js",
     "test-node": "tape test/*.js"
