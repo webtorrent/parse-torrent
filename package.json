@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "brfs": "^1.0.0",
-    "standard": "^2.2.1",
+    "standard": "^3.7.2",
     "tape": "^4.0.0",
     "zuul": "^1.16.3"
   },
