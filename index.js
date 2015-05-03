@@ -16,7 +16,7 @@ module.exports = function parseTorrent (torrentId) {
     return magnet('magnet:?xt=urn:btih:' + torrentId)
   } else if (Buffer.isBuffer(torrentId) && len === 20) {
     // info hash (buffer)
-    return { infoHash: torrentId.toString('hex') }
+    return magnet('magnet:?xt=urn:btih:' + torrentId.toString('hex'))
   } else if (Buffer.isBuffer(torrentId)) {
     // .torrent file (buffer)
     return parseTorrentFile(torrentId) // might throw
