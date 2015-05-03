@@ -12,26 +12,26 @@ test('Test supported torrentInfo types', function (t) {
   parsed = parseTorrent(leavesParsed.infoHash)
   t.equal(parsed.infoHash, leavesParsed.infoHash)
   t.equal(parsed.name, undefined)
-  t.deepEqual(parsed.announce, undefined)
+  t.deepEqual(parsed.announce, [])
 
   // info hash (as a Buffer)
   parsed = parseTorrent(new Buffer(leavesParsed.infoHash, 'hex'))
   t.equal(parsed.infoHash, leavesParsed.infoHash)
   t.equal(parsed.name, undefined)
-  t.deepEqual(parsed.announce, undefined)
+  t.deepEqual(parsed.announce, [])
 
   // magnet uri (as a utf8 string)
   var magnet = 'magnet:?xt=urn:btih:' + leavesParsed.infoHash
   parsed = parseTorrent(magnet)
   t.equal(parsed.infoHash, leavesParsed.infoHash)
   t.equal(parsed.name, undefined)
-  t.deepEqual(parsed.announce, undefined)
+  t.deepEqual(parsed.announce, [])
 
   // magnet uri with name
   parsed = parseTorrent(magnet + '&dn=' + encodeURIComponent(leavesParsed.name))
   t.equal(parsed.infoHash, leavesParsed.infoHash)
   t.equal(parsed.name, leavesParsed.name)
-  t.deepEqual(parsed.announce, undefined)
+  t.deepEqual(parsed.announce, [])
 
   // magnet uri with trackers
   parsed = parseTorrent(magnet + '&tr=' + encodeURIComponent(leavesParsed.announce[0]))
