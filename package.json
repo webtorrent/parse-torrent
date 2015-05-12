@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "magnet-uri": "^4.0.0",
-    "parse-torrent-file": "^2.0.0"
+    "parse-torrent-file": "^3.0.0"
   },
   "devDependencies": {
     "brfs": "^1.0.0",
