@@ -69,13 +69,6 @@ parseTorrent(fs.readFileSync(__dirname + '/torrents/leaves.torrent'))
 //   private: false,
 //   created: Thu Aug 01 2013 06:27:46 GMT-0700 (PDT),
 //   comment: 'Downloaded from http://TheTorrent.org',
-//   announceList:
-//    [ [ 'http://tracker.thepiratebay.org/announce' ],
-//      [ 'udp://tracker.openbittorrent.com:80' ],
-//      [ 'udp://tracker.ccc.de:80' ],
-//      [ 'udp://tracker.publicbt.com:80' ],
-//      [ 'udp://fr33domtracker.h33t.com:3310/announce',
-//        'http://tracker.bittorrent.am/announce' ] ],
 //   announce:
 //    [ 'http://tracker.thepiratebay.org/announce',
 //      'udp://tracker.openbittorrent.com:80',
