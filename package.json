@@ -15,6 +15,7 @@
     "brfs": "^1.0.0",
     "standard": "^3.7.2",
     "tape": "^4.0.0",
+    "xtend": "^4.0.0",
     "zuul": "^3.0.0"
   },
   "homepage": "https://github.com/feross/parse-torrent",

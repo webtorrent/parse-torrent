@@ -1,3 +1,4 @@
+var extend = require('xtend')
 var fs = require('fs')
 var parseTorrent = require('../')
 var test = require('tape')
@@ -50,6 +51,20 @@ test('Test supported torrentInfo types', function (t) {
   t.equal(parsed.infoHash, leavesParsed.infoHash)
   t.equal(parsed.name, leavesParsed.name)
   t.deepEqual(parsed.announce, leavesParsed.announce)
+
+  // leavesParsed torrent (as an Object), with string 'announce' property
+  var leavesParsedModified = extend(leavesParsed, { announce: leavesParsed.announce[0] })
+  parsed = parseTorrent(leavesParsedModified)
+  t.equal(parsed.infoHash, leavesParsed.infoHash)
+  t.equal(parsed.name, leavesParsed.name)
+  t.deepEqual(parsed.announce, [ leavesParsed.announce[0] ])
+
+  // leavesParsed torrent (as an Object), with empty 'announce' property
+  leavesParsedModified = extend(leavesParsed, { announce: undefined })
+  parsed = parseTorrent(leavesParsedModified)
+  t.equal(parsed.infoHash, leavesParsed.infoHash)
+  t.equal(parsed.name, leavesParsed.name)
+  t.deepEqual(parsed.announce, [])
 
   t.end()
 })

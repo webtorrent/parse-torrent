@@ -22,6 +22,10 @@ module.exports = function parseTorrent (torrentId) {
     return parseTorrentFile(torrentId) // might throw
   } else if (torrentId && torrentId.infoHash) {
     // parsed torrent (from `parse-torrent`, `parse-torrent-file`, or `magnet-uri`)
+    if (!torrentId.announce) torrentId.announce = []
+    if (typeof torrentId.announce === 'string') {
+      torrentId.announce = [ torrentId.announce ]
+    }
     return torrentId
   } else {
     throw new Error('Invalid torrent identifier')
