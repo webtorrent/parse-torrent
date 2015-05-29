@@ -130,7 +130,19 @@ var buf = parseTorrent.toTorrentFile({
   }
 })
 console.log(buf)
+```
 
+### remote torrents
+
+To support remote torrent identifiers (i.e. http/https links to .torrent files, or
+filesystem paths), use the `parseTorrent.remote` function. It takes a callback since
+it performs async operations:
+
+```js
+parseTorrent.remote(torrentId, function (err, parsedTorrent) {
+  if (err) throw err
+  console.log(parsedTorrent)
+})
 ```
 
 ## license
