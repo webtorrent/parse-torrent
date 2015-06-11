@@ -67,7 +67,7 @@ function parseTorrentRemote (torrentId, cb) {
       }
       parseOrThrow(torrentBuf)
     })
-  } else if (typeof fs.readFile === 'function') {
+  } else if (typeof fs.readFile === 'function' && typeof torrentId === 'string') {
     // assume it's a filesystem path
     fs.readFile(torrentId, function (err, torrentBuf) {
       if (err) return cb(new Error('Invalid torrent identifier'))
