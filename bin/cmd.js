@@ -1,45 +1,36 @@
 #!/usr/bin/env node
 
-var fs = require('fs')
+var stdin = require('get-stdin')
 var parseTorrent = require('../')
 
 function usage () {
   console.error('Usage: parse-torrent /path/to/torrent')
   console.error('       parse-torrent magnet_uri')
+  console.error('       parse-torrent --stdin')
 }
 
 function error (err) {
-  if (err) console.error(err.message)
-  usage()
+  console.error(err.message)
+  process.exit(1)
 }
 
-var torrentId = process.argv[2]
+var arg = process.argv[2]
 
-if (!torrentId) {
+if (!arg) {
+  console.error('Missing required argument')
   usage()
   process.exit(1)
 }
 
-var parsedTorrent
-try {
-  parsedTorrent = parseTorrent(torrentId)
-} catch (err1) {
-  var file
-  try {
-    file = fs.readFileSync(torrentId)
-  } catch (err2) {
-    error(err1)
-    process.exit(1)
-  }
-  try {
-    parsedTorrent = parseTorrent(file)
-  } catch (err2) {
-    error(err2)
-    process.exit(1)
-  }
+if (arg === '--stdin' || arg === '-') stdin.buffer(onTorrentId)
+else onTorrentId(arg)
+
+function onTorrentId (torrentId) {
+  parseTorrent.remote(torrentId, function (err, parsedTorrent) {
+    if (err) return error(err)
+
+    delete parsedTorrent.info
+    delete parsedTorrent.infoBuffer
+    console.log(JSON.stringify(parsedTorrent, undefined, 2))
+  })
 }
-
-delete parsedTorrent.info
-delete parsedTorrent.infoBuffer
-
-console.log(JSON.stringify(parsedTorrent, undefined, 2))

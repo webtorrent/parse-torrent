@@ -145,6 +145,22 @@ parseTorrent.remote(torrentId, function (err, parsedTorrent) {
 })
 ```
 
+### command line program
+
+This package also includes a command line program.
+
+```
+Usage: parse-torrent /path/to/torrent
+       parse-torrent magnet_uri
+       parse-torrent --stdin
+```
+
+To install it, run:
+
+```
+npm install parse-torrent -g
+```
+
 ## license
 
 MIT. Copyright (c) [Feross Aboukhadijeh](http://feross.org).
