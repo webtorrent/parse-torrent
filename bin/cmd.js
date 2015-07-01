@@ -23,6 +23,7 @@ if (!arg) {
 }
 
 if (arg === '--stdin' || arg === '-') stdin.buffer(onTorrentId)
+else if (arg === '--version' || arg === '-v') console.log(require('../package.json').version)
 else onTorrentId(arg)
 
 function onTorrentId (torrentId) {
