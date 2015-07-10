@@ -73,19 +73,6 @@ test('Test supported torrentInfo types', function (t) {
   t.end()
 })
 
-var leavesParsed = {
-  infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-  name: 'Leaves of Grass by Walt Whitman.epub',
-  announce: [
-    'http://tracker.bittorrent.am/announce',
-    'http://tracker.thepiratebay.org/announce',
-    'udp://fr33domtracker.h33t.com:3310/announce',
-    'udp://tracker.ccc.de:80',
-    'udp://tracker.openbittorrent.com:80',
-    'udp://tracker.publicbt.com:80'
-  ]
-}
-
 var leavesMagnetParsed = {
   infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
   name: 'Leaves of Grass by Walt Whitman.epub',
