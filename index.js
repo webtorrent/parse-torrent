@@ -3,7 +3,7 @@ module.exports.remote = parseTorrentRemote
 
 var dezalgo = require('dezalgo')
 var fs = require('fs') // browser exclude
-var get = require('simple-get') // browser exclude
+var get = require('simple-get')
 var magnet = require('magnet-uri')
 var parseTorrentFile = require('parse-torrent-file')
 

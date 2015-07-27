@@ -4,9 +4,6 @@
   "version": "5.2.1",
   "author": "Feross Aboukhadijeh <feross@feross.org> (http://feross.org/)",
   "bin": "./bin/cmd.js",
-  "browser": {
-    "simple-get": false
-  },
   "bugs": {
     "url": "https://github.com/feross/parse-torrent/issues"
   },
