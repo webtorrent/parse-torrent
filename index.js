@@ -20,7 +20,7 @@ function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /magnet:/.test(torrentId)) {
     // magnet uri (string)
     return magnet(torrentId)
-  } else if (typeof torrentId === 'string' && (len === 40 || len === 32)) {
+  } else if (typeof torrentId === 'string' && (/^([a-f0-9]){40}$/i.test(torrentId) || /^([a-f0-9]){32}$/i.test(torrentId))) {
     // info hash (hex/base-32 string)
     return magnet('magnet:?xt=urn:btih:' + torrentId)
   } else if (Buffer.isBuffer(torrentId) && len === 20) {
