@@ -16,14 +16,13 @@ module.exports.toTorrentFile = parseTorrentFile.encode
  * @return {Object}
  */
 function parseTorrent (torrentId) {
-  var len = torrentId && torrentId.length
   if (typeof torrentId === 'string' && /magnet:/.test(torrentId)) {
     // magnet uri (string)
     return magnet(torrentId)
-  } else if (typeof torrentId === 'string' && (/^([a-f0-9]){40}$/i.test(torrentId) || /^([a-f0-9]){32}$/i.test(torrentId))) {
+  } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // info hash (hex/base-32 string)
     return magnet('magnet:?xt=urn:btih:' + torrentId)
-  } else if (Buffer.isBuffer(torrentId) && len === 20) {
+  } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
     // info hash (buffer)
     return magnet('magnet:?xt=urn:btih:' + torrentId.toString('hex'))
   } else if (Buffer.isBuffer(torrentId)) {
