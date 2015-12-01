@@ -22,7 +22,7 @@ if (!arg) {
   process.exit(1)
 }
 
-if (arg === '--stdin' || arg === '-') stdin.buffer(onTorrentId)
+if (arg === '--stdin' || arg === '-') stdin.buffer().then(onTorrentId)
 else if (arg === '--version' || arg === '-v') console.log(require('../package.json').version)
 else onTorrentId(arg)
 
