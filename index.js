@@ -34,6 +34,7 @@ function parseTorrent (torrentId) {
     if (typeof torrentId.announce === 'string') {
       torrentId.announce = [ torrentId.announce ]
     }
+    if (!torrentId.urlList) torrentId.urlList = []
     return torrentId
   } else {
     throw new Error('Invalid torrent identifier')
