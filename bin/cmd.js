@@ -32,6 +32,7 @@ function onTorrentId (torrentId) {
 
     delete parsedTorrent.info
     delete parsedTorrent.infoBuffer
+    delete parsedTorrent.infoHashBuffer
     console.log(JSON.stringify(parsedTorrent, undefined, 2))
   })
 }
