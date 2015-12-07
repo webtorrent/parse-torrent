@@ -1,7 +1,6 @@
 module.exports = parseTorrent
 module.exports.remote = parseTorrentRemote
 
-var dezalgo = require('dezalgo')
 var fs = require('fs') // browser exclude
 var get = require('simple-get')
 var magnet = require('magnet-uri')
@@ -44,7 +43,6 @@ function parseTorrent (torrentId) {
 function parseTorrentRemote (torrentId, cb) {
   var parsedTorrent
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
-  cb = dezalgo(cb)
 
   try {
     parsedTorrent = parseTorrent(torrentId)
@@ -54,17 +52,16 @@ function parseTorrentRemote (torrentId, cb) {
   }
 
   if (parsedTorrent && parsedTorrent.infoHash) {
-    cb(null, parsedTorrent)
+    process.nextTick(function () {
+      cb(null, parsedTorrent)
+    })
   } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
     // http or https url to torrent file
     get.concat({
       url: torrentId,
       headers: { 'user-agent': 'WebTorrent (http://webtorrent.io)' }
     }, function (err, torrentBuf) {
-      if (err) {
-        err = new Error('Error downloading torrent: ' + err.message)
-        return cb(err)
-      }
+      if (err) return cb(new Error('Error downloading torrent: ' + err.message))
       parseOrThrow(torrentBuf)
     })
   } else if (typeof fs.readFile === 'function' && typeof torrentId === 'string') {
@@ -74,7 +71,9 @@ function parseTorrentRemote (torrentId, cb) {
       parseOrThrow(torrentBuf)
     })
   } else {
-    cb(new Error('Invalid torrent identifier'))
+    process.nextTick(function () {
+      cb(new Error('Invalid torrent identifier'))
+    })
   }
 
   function parseOrThrow (torrentBuf) {
