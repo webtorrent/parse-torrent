@@ -55,8 +55,8 @@ function parseTorrentRemote (torrentId, cb) {
 
   if (parsedTorrent && parsedTorrent.infoHash) {
     cb(null, parsedTorrent)
-  } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
-    // http or https url to torrent file
+  } else if (typeof get === 'function' && (/^https?:/.test(torrentId) || /^blob:/.test(torrentId))) {
+    // blob, http or https url to torrent file
     get.concat({
       url: torrentId,
       headers: { 'user-agent': 'WebTorrent (http://webtorrent.io)' }
