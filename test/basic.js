@@ -163,8 +163,6 @@ function makeBlobShim (buf, name) {
   return file
 }
 
-var leavesBlob = makeBlobShim(leaves)
-
 test('parse single file torrent from Blob', function (t) {
   if (typeof Blob === 'undefined') {
     t.pass('Skipping Blob test')
@@ -173,6 +171,7 @@ test('parse single file torrent from Blob', function (t) {
   }
 
   t.plan(4)
+  var leavesBlob = makeBlobShim(leaves)
   parseTorrent.remote(leavesBlob, function (err, parsed) {
     t.error(err)
     t.equal(parsed.infoHash, leavesParsed.infoHash)
