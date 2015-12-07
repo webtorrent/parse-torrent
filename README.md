@@ -135,8 +135,8 @@ console.log(buf)
 ### remote torrents
 
 To support remote torrent identifiers (i.e. http/https links to .torrent files, or
-filesystem paths), use the `parseTorrent.remote` function. It takes a callback since
-it performs async operations:
+filesystem paths), as well as Blobs use the `parseTorrent.remote` function. It takes
+a callback since these torrent types require async operations:
 
 ```js
 parseTorrent.remote(torrentId, function (err, parsedTorrent) {

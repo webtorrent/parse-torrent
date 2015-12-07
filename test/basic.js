@@ -1,3 +1,5 @@
+/* global Blob */
+
 var extend = require('xtend')
 var fs = require('fs')
 var parseTorrent = require('../')
@@ -153,4 +155,28 @@ test('parse url-list for webseed support', function (t) {
   var torrent = parseTorrent(leavesUrlList)
   t.deepEqual(torrent.urlList, [ 'http://www2.hn.psu.edu/faculty/jmanis/whitman/leaves-of-grass6x9.pdf' ])
   t.end()
+})
+
+function makeBlobShim (buf, name) {
+  var file = new Blob([ buf ])
+  file.name = name
+  return file
+}
+
+var leavesBlob = makeBlobShim(leaves)
+
+test('parse single file torrent from Blob', function (t) {
+  if (typeof Blob === 'undefined') {
+    t.pass('Skipping Blob test')
+    t.end()
+    return
+  }
+
+  t.plan(4)
+  parseTorrent.remote(leavesBlob, function (err, parsed) {
+    t.error(err)
+    t.equal(parsed.infoHash, leavesParsed.infoHash)
+    t.equal(parsed.name, leavesParsed.name)
+    t.deepEquals(parsed.announce, leavesParsed.announce)
+  })
 })

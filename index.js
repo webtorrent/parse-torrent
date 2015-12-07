@@ -1,6 +1,9 @@
+/* global Blob */
+
 module.exports = parseTorrent
 module.exports.remote = parseTorrentRemote
 
+var blobToBuffer = require('blob-to-buffer')
 var fs = require('fs') // browser exclude
 var get = require('simple-get')
 var magnet = require('magnet-uri')
@@ -47,13 +50,18 @@ function parseTorrentRemote (torrentId, cb) {
   try {
     parsedTorrent = parseTorrent(torrentId)
   } catch (err) {
-    // If torrent fails to parse, it could be a http/https/blob URL or filesystem
-    // path, so don't consider it an error yet.
+    // If torrent fails to parse, it could be a Blob, http/https/blob URL or
+    // filesystem path, so don't consider it an error yet.
   }
 
   if (parsedTorrent && parsedTorrent.infoHash) {
     process.nextTick(function () {
       cb(null, parsedTorrent)
+    })
+  } else if (isBlob(torrentId)) {
+    blobToBuffer(torrentId, function (err, torrentBuf) {
+      if (err) return cb(new Error('Error converting Blob: ' + err.message))
+      parseOrThrow(torrentBuf)
     })
   } else if (typeof get === 'function' && (/^https?:/.test(torrentId) || /^blob:/.test(torrentId))) {
     // http, https, or blob url to torrent file
@@ -85,4 +93,13 @@ function parseTorrentRemote (torrentId, cb) {
     if (parsedTorrent && parsedTorrent.infoHash) cb(null, parsedTorrent)
     else cb(new Error('Invalid torrent identifier'))
   }
+}
+
+/**
+ * Check if `obj` is a W3C `Blob` or `File` object
+ * @param  {*} obj
+ * @return {boolean}
+ */
+function isBlob (obj) {
+  return typeof Blob !== 'undefined' && obj instanceof Blob
 }
