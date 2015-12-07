@@ -49,7 +49,7 @@ function parseTorrentRemote (torrentId, cb) {
   try {
     parsedTorrent = parseTorrent(torrentId)
   } catch (err) {
-    // If torrent fails to parse, it could be an http/https URL or filesystem path, so
+    // If torrent fails to parse, it could be a blob, http/https URL or filesystem path, so
     // don't consider it an error yet.
   }
 
