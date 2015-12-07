@@ -50,7 +50,7 @@ function parseTorrentRemote (torrentId, cb) {
   try {
     parsedTorrent = parseTorrent(torrentId)
   } catch (err) {
-    // If torrent fails to parse, it could be a Blob, http/https/blob URL or
+    // If torrent fails to parse, it could be a Blob, http/https URL or
     // filesystem path, so don't consider it an error yet.
   }
 
@@ -63,8 +63,8 @@ function parseTorrentRemote (torrentId, cb) {
       if (err) return cb(new Error('Error converting Blob: ' + err.message))
       parseOrThrow(torrentBuf)
     })
-  } else if (typeof get === 'function' && (/^https?:/.test(torrentId) || /^blob:/.test(torrentId))) {
-    // http, https, or blob url to torrent file
+  } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
+    // http, or https url to torrent file
     get.concat({
       url: torrentId,
       headers: { 'user-agent': 'WebTorrent (http://webtorrent.io)' }
