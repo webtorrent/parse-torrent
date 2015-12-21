@@ -50,11 +50,11 @@ parseTorrent('magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36&dn=Le
 //   name: 'Leaves of Grass by Walt Whitman.epub' }
 
 // magnet uri with trackers
-parseTorrent('magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36&tr=http%3A%2F%2Ftracker.thepiratebay.org%2Fannounce')
+parseTorrent('magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36&tr=http%3A%2F%2Ftracker.example.com%2Fannounce')
 // { xt: 'urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-//   tr: 'http://tracker.thepiratebay.org/announce',
+//   tr: 'http://tracker.example.com/announce',
 //   infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-//   announce: [ 'http://tracker.thepiratebay.org/announce' ] }
+//   announce: [ 'http://tracker.example.com/announce' ] }
 
 // .torrent file (as a Buffer)
 parseTorrent(fs.readFileSync(__dirname + '/torrents/leaves.torrent'))
@@ -70,12 +70,7 @@ parseTorrent(fs.readFileSync(__dirname + '/torrents/leaves.torrent'))
 //   created: Thu Aug 01 2013 06:27:46 GMT-0700 (PDT),
 //   comment: 'Downloaded from http://TheTorrent.org',
 //   announce:
-//    [ 'http://tracker.thepiratebay.org/announce',
-//      'udp://tracker.openbittorrent.com:80',
-//      'udp://tracker.ccc.de:80',
-//      'udp://tracker.publicbt.com:80',
-//      'udp://fr33domtracker.h33t.com:3310/announce',
-//      'http://tracker.bittorrent.am/announce' ],
+//    [ 'http://tracker.example.com/announce' ],
 //   urlList: [],
 //   files:
 //    [ { path: 'Leaves of Grass by Walt Whitman.epub',

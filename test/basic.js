@@ -41,10 +41,10 @@ test('Test supported torrentInfo types', function (t) {
   t.deepEqual(parsed.announce, [])
 
   // magnet uri with trackers
-  parsed = parseTorrent(magnet + '&tr=' + encodeURIComponent(leavesParsed.announce[0]))
+  parsed = parseTorrent(magnet + '&tr=' + encodeURIComponent('udp://tracker.example.com:80'))
   t.equal(parsed.infoHash, leavesParsed.infoHash)
   t.equal(parsed.name, undefined)
-  t.deepEqual(parsed.announce, [ leavesParsed.announce[0] ])
+  t.deepEqual(parsed.announce, [ 'udp://tracker.example.com:80' ])
 
   // .torrent file (as a Buffer)
   parsed = parseTorrent(leaves)
@@ -59,11 +59,23 @@ test('Test supported torrentInfo types', function (t) {
   t.deepEqual(parsed.announce, leavesParsed.announce)
 
   // leavesParsed torrent (as an Object), with string 'announce' property
-  var leavesParsedModified = extend(leavesParsed, { announce: leavesParsed.announce[0] })
+  var leavesParsedModified = extend(leavesParsed, { announce: 'udp://tracker.example.com:80' })
   parsed = parseTorrent(leavesParsedModified)
   t.equal(parsed.infoHash, leavesParsed.infoHash)
   t.equal(parsed.name, leavesParsed.name)
-  t.deepEqual(parsed.announce, [ leavesParsed.announce[0] ])
+  t.deepEqual(parsed.announce, [ 'udp://tracker.example.com:80' ])
+
+  // leavesParsed torrent (as an Object), with array 'announce' property
+  leavesParsedModified = extend(leavesParsed, {
+    announce: [ 'udp://tracker.example.com:80', 'udp://tracker.example.com:81' ]
+  })
+  parsed = parseTorrent(leavesParsedModified)
+  t.equal(parsed.infoHash, leavesParsed.infoHash)
+  t.equal(parsed.name, leavesParsed.name)
+  t.deepEqual(parsed.announce, [
+    'udp://tracker.example.com:80',
+    'udp://tracker.example.com:81'
+  ])
 
   // leavesParsed torrent (as an Object), with empty 'announce' property
   leavesParsedModified = extend(leavesParsed, { announce: undefined })
@@ -84,40 +96,7 @@ var leavesMagnetParsed = {
 var prideParsed = {
   infoHash: '455a2295b558ac64e0348fb0c61f433224484908',
   name: 'PRIDE AND PREJUDICE  - Jane Austen',
-  announce: [
-    'http://94.228.192.98.nyud.net/announce',
-    'http://announce.opensharing.org:2710/announce',
-    'http://announce.torrentsmd.com:6969/announce',
-    'http://announce.torrentsmd.com:8080/announce',
-    'http://announce.torrentsmd.com:8080/announce.php',
-    'http://beta.mytracker.me:6969/announce',
-    'http://bigfoot1942.sektori.org:6969/announce',
-    'http://bt.careland.com.cn:6969/announce',
-    'http://bt.eutorrents.com/announce.php',
-    'http://bt.poletracker.org:2710/announce',
-    'http://calu-atrack.appspot.com.nyud.net/announce',
-    'http://calu-atrack.appspot.com/announce',
-    'http://e180.php5.cz/announce',
-    'http://exodus.desync.com/announce',
-    'http://exodus.desync.com:6969/announce',
-    'http://fr33dom.h33t.com:3310/announce',
-    'http://fr33domtracker.h33t.com:3310/announce',
-    'http://greenlietracker.appspot.com/announce',
-    'http://i.bandito.org/announce',
-    'http://retracker.hq.ertelecom.ru/announce',
-    'http://retracker.perm.ertelecom.ru/announce',
-    'http://tracker.ex.ua/announce',
-    'http://tracker.marshyonline.net/announce',
-    'http://tracker.metin2.com.br:6969/announce',
-    'http://tracker.tfile.me/announce',
-    'http://tracker.thepiratebay.org/announce',
-    'http://tracker.yify-torrents.com/announce',
-    'http://tracker1.wasabii.com.tw:6969/announce',
-    'http://www.h33t.com:3310/announce',
-    'udp://tracker.ccc.de:80',
-    'udp://tracker.openbittorrent.com:80',
-    'udp://tracker.publicbt.com:80'
-  ]
+  announce: []
 }
 
 test('parse single file torrent', function (t) {
