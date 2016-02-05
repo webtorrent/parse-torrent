@@ -3,14 +3,15 @@
 var extend = require('xtend')
 var fs = require('fs')
 var parseTorrent = require('../')
+var path = require('path')
 var test = require('tape')
 
-var leaves = fs.readFileSync(__dirname + '/torrents/leaves.torrent')
+var leaves = fs.readFileSync(path.join(__dirname, 'torrents/leaves.torrent'))
 var leavesParsed = parseTorrent(leaves)
-var leavesMagnet = fs.readFileSync(__dirname + '/torrents/leaves-magnet.torrent')
-var leavesCorrupt = fs.readFileSync(__dirname + '/torrents/leaves-corrupt.torrent')
-var leavesUrlList = fs.readFileSync(__dirname + '/torrents/leaves-url-list.torrent')
-var pride = fs.readFileSync(__dirname + '/torrents/pride.torrent')
+var leavesMagnet = fs.readFileSync(path.join(__dirname, 'torrents/leaves-magnet.torrent'))
+var leavesCorrupt = fs.readFileSync(path.join(__dirname, 'torrents/leaves-corrupt.torrent'))
+var leavesUrlList = fs.readFileSync(path.join(__dirname, '/torrents/leaves-url-list.torrent'))
+var pride = fs.readFileSync(path.join(__dirname, 'torrents/pride.torrent'))
 
 test('Test supported torrentInfo types', function (t) {
   var parsed

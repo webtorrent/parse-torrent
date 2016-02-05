@@ -1,9 +1,10 @@
 var fs = require('fs')
 var http = require('http')
 var parseTorrent = require('../')
+var path = require('path')
 var test = require('tape')
 
-var leavesPath = __dirname + '/torrents/leaves.torrent'
+var leavesPath = path.join(__dirname, 'torrents/leaves.torrent')
 var leaves = fs.readFileSync(leavesPath)
 var leavesParsed = parseTorrent(leaves)
 
