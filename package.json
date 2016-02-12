@@ -10,7 +10,7 @@
   "dependencies": {
     "blob-to-buffer": "^1.2.3",
     "get-stdin": "^5.0.1",
-    "magnet-uri": "^5.0.0",
+    "magnet-uri": "^5.1.3",
     "parse-torrent-file": "^3.0.0",
     "simple-get": "^1.3.3"
   },
