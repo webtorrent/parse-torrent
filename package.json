@@ -8,7 +8,7 @@
     "url": "https://github.com/feross/parse-torrent/issues"
   },
   "dependencies": {
-    "blob-to-buffer": "^1.2.3",
+    "blob-to-buffer": "^1.2.6",
     "get-stdin": "^5.0.1",
     "magnet-uri": "^5.0.0",
     "parse-torrent-file": "^3.0.0",
