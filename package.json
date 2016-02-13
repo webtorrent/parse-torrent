@@ -11,7 +11,7 @@
     "blob-to-buffer": "^1.2.6",
     "get-stdin": "^5.0.1",
     "magnet-uri": "^5.1.3",
-    "parse-torrent-file": "^3.0.0",
+    "parse-torrent-file": "^3.3.2",
     "simple-get": "^1.3.3"
   },
   "devDependencies": {
