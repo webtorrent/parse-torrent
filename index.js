@@ -68,7 +68,7 @@ function parseTorrentRemote (torrentId, cb) {
     get.concat({
       url: torrentId,
       headers: { 'user-agent': 'WebTorrent (http://webtorrent.io)' }
-    }, function (err, torrentBuf) {
+    }, function (err, res, torrentBuf) {
       if (err) return cb(new Error('Error downloading torrent: ' + err.message))
       parseOrThrow(torrentBuf)
     })
