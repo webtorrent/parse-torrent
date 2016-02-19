@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "brfs": "^1.0.0",
-    "standard": "^6.0.5",
+    "standard": "^6.0.6",
     "tape": "^4.0.0",
     "xtend": "^4.0.0",
     "zuul": "^3.0.0"
