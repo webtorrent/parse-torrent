@@ -1,19 +1,14 @@
-var fs = require('fs')
+var fixtures = require('webtorrent-fixtures')
 var http = require('http')
 var parseTorrent = require('../')
-var path = require('path')
 var test = require('tape')
-
-var leavesPath = path.join(__dirname, 'torrents/leaves.torrent')
-var leaves = fs.readFileSync(leavesPath)
-var leavesParsed = parseTorrent(leaves)
 
 test('http url to a torrent file, string', function (t) {
   t.plan(3)
 
   var server = http.createServer(function (req, res) {
     t.pass('server got request')
-    res.end(leaves)
+    res.end(fixtures.leaves.torrent)
   })
 
   server.listen(0, function () {
@@ -21,7 +16,7 @@ test('http url to a torrent file, string', function (t) {
     var url = 'http://127.0.0.1:' + port
     parseTorrent.remote(url, function (err, parsedTorrent) {
       t.error(err)
-      t.deepEqual(parsedTorrent, leavesParsed)
+      t.deepEqual(parsedTorrent, fixtures.leaves.parsedTorrent)
       server.close()
     })
   })
@@ -30,8 +25,8 @@ test('http url to a torrent file, string', function (t) {
 test('filesystem path to a torrent file, string', function (t) {
   t.plan(2)
 
-  parseTorrent.remote(leavesPath, function (err, parsedTorrent) {
+  parseTorrent.remote(fixtures.leaves.torrentPath, function (err, parsedTorrent) {
     t.error(err)
-    t.deepEqual(parsedTorrent, leavesParsed)
+    t.deepEqual(parsedTorrent, fixtures.leaves.parsedTorrent)
   })
 })
