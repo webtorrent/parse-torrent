@@ -18,7 +18,7 @@
     "brfs": "^1.0.0",
     "standard": "^6.0.5",
     "tape": "^4.0.0",
-    "webtorrent-fixtures": "^1.0.0",
+    "webtorrent-fixtures": "^1.2.0",
     "xtend": "^4.0.0",
     "zuul": "^3.0.0"
   },
