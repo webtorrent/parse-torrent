@@ -10,9 +10,5 @@ browsers:
   version: latest
 - name: microsoftedge
   version: latest
-- name: iphone
-  version: latest
-- name: ipad
-  version: latest
 - name: android
   version: latest
