@@ -20,7 +20,7 @@
     "tape": "^4.0.0",
     "webtorrent-fixtures": "^1.0.0",
     "xtend": "^4.0.0",
-    "zuul": "^3.0.0"
+    "zuul": "^3.10.1"
   },
   "homepage": "https://github.com/feross/parse-torrent",
   "keywords": [
