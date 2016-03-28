@@ -103,3 +103,7 @@ function parseTorrentRemote (torrentId, cb) {
 function isBlob (obj) {
   return typeof Blob !== 'undefined' && obj instanceof Blob
 }
+
+// Workaround Browserify v13 bug
+// https://github.com/substack/node-browserify/issues/1483
+;(function () { Buffer(0) })()
