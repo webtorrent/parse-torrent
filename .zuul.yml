@@ -12,5 +12,3 @@ browsers:
     version: latest
   - name: android
     version: latest
-  - name: iphone
-    version: latest
