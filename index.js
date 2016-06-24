@@ -18,7 +18,7 @@ module.exports.toTorrentFile = parseTorrentFile.encode
  * @return {Object}
  */
 function parseTorrent (torrentId) {
-  if (typeof torrentId === 'string' && /magnet:/.test(torrentId)) {
+  if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
     // magnet uri (string)
     return magnet(torrentId)
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {

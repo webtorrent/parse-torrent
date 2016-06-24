@@ -27,6 +27,13 @@ test('Test supported torrentInfo types', function (t) {
   t.equal(parsed.name, undefined)
   t.deepEqual(parsed.announce, [])
 
+  // stream-magnet uri (as a utf8 string)
+  var streamMagnet = 'stream-magnet:?xt=urn:btih:' + fixtures.leaves.parsedTorrent.infoHash
+  parsed = parseTorrent(streamMagnet)
+  t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
+  t.equal(parsed.name, undefined)
+  t.deepEqual(parsed.announce, [])
+
   // magnet uri with name
   parsed = parseTorrent(magnet + '&dn=' + encodeURIComponent(fixtures.leaves.parsedTorrent.name))
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
