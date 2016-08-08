@@ -2,7 +2,11 @@
   "name": "parse-torrent",
   "description": "Parse a torrent identifier (magnet uri, .torrent file, info hash)",
   "version": "5.8.0",
-  "author": "Feross Aboukhadijeh <feross@feross.org> (http://feross.org/)",
+  "author": {
+    "name": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "http://feross.org/"
+  },
   "bin": "./bin/cmd.js",
   "bugs": {
     "url": "https://github.com/feross/parse-torrent/issues"
@@ -24,12 +28,12 @@
   },
   "homepage": "https://github.com/feross/parse-torrent",
   "keywords": [
-    "torrent",
-    "parse torrent",
-    "read torrent",
     ".torrent",
-    "peer-to-peer",
     "bittorrent",
+    "parse torrent",
+    "peer-to-peer",
+    "read torrent",
+    "torrent",
     "webtorrent"
   ],
   "license": "MIT",
