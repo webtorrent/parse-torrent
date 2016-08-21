@@ -22,7 +22,7 @@ function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
     // magnet uri (string)
     var m = magnet(torrentId)
-    if (!m.infoHash) throw new Error('Missing infoHash')
+    if (m.xs) throw new Error('Exact source magnets need to call .remote()')
     return m
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // info hash (hex/base-32 string)
