@@ -46,7 +46,8 @@ function parseTorrent (torrentId) {
   }
 }
 
-function parseTorrentRemote (torrentId, cb, dht) {
+function parseTorrentRemote (opts, cb) {
+  var torrentId = typeof opts === 'object' ? opts.torrentId : opts
   var parsedTorrent
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
@@ -66,7 +67,7 @@ function parseTorrentRemote (torrentId, cb, dht) {
       if (err) return cb(new Error('Error converting Blob: ' + err.message))
       parseOrThrow(torrentBuf)
     })
-  } else if (dht && /^(stream-)?magnet:/.test(torrentId)) {
+  } else if (opts.dht && /^(stream-)?magnet:/.test(torrentId)) {
     var m = magnet(torrentId)
     if (!m.xs) {
       process.nextTick(function () {
@@ -78,7 +79,7 @@ function parseTorrentRemote (torrentId, cb, dht) {
         var publicKeyBuf = Buffer(publicKey, 'hex')
         var targetId = crypto.createHash('sha1').update(publicKeyBuf).digest('hex') // XXX missing salt
 
-        dht.get(targetId, function (err, res) {
+        opts.dht.get(targetId, function (err, res) {
           if (err) return cb(new Error('Error finding this publicKey in the DHT'))
           if (!res && !res.v.ih) return cb(new Error('Found publicKey in DHT, but no torrent inside'))
           parseOrThrow(res.v.ih)
