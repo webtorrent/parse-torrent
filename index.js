@@ -3,6 +3,7 @@
 
 const bencode = require('bencode')
 const blobToBuffer = require('blob-to-buffer')
+const crypto = require('crypto')
 const fs = require('fs') // browser exclude
 const get = require('simple-get')
 const magnet = require('magnet-uri')
@@ -80,6 +81,29 @@ function parseTorrentRemote (torrentId, opts, cb) {
       if (err) return cb(new Error(`Error converting Blob: ${err.message}`))
       parseOrThrow(torrentBuf)
     })
+  } else if (dht && /^(stream-)?magnet:/.test(torrentId)) {
+    var m = magnet(torrentId)
+    if (!m.xs) {
+      process.nextTick(function () {
+        cb(new Error('Missing xs (exact source) in magnet URI'))
+      })
+    } else {
+      if ((m = m.xs.match(/^urn:btpk:(.{64})/))) {
+        var publicKey = m[1].toLowerCase()
+        var publicKeyBuf = Buffer(publicKey, 'hex')
+        var targetId = crypto.createHash('sha1').update(publicKeyBuf).digest('hex') // XXX missing salt
+
+        dht.get(targetId, function (err, res) {
+          if (err) return cb(new Error('Error finding this publicKey in the DHT'))
+          if (!res && !res.v.ih) return cb(new Error('Found publicKey in DHT, but no torrent inside'))
+          parseOrThrow(res.v.ih)
+        })
+      } else {
+        process.nextTick(function () {
+          cb(new Error('Can\'t find publicKey in magnet URI'))
+        })
+      }
+    }
   } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
     // http, or https url to torrent file
     opts = Object.assign({
