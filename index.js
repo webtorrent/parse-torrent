@@ -8,6 +8,7 @@ var fs = require('fs') // browser exclude
 var get = require('simple-get')
 var magnet = require('magnet-uri')
 var parseTorrentFile = require('parse-torrent-file')
+var crypto = require('crypto')
 
 module.exports.toMagnetURI = magnet.encode
 module.exports.toTorrentFile = parseTorrentFile.encode
@@ -20,7 +21,9 @@ module.exports.toTorrentFile = parseTorrentFile.encode
 function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
     // magnet uri (string)
-    return magnet(torrentId)
+    var m = magnet(torrentId)
+    if (!m.infoHash) throw new Error('Missing infoHash')
+    return m
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // info hash (hex/base-32 string)
     return magnet('magnet:?xt=urn:btih:' + torrentId)
@@ -43,7 +46,7 @@ function parseTorrent (torrentId) {
   }
 }
 
-function parseTorrentRemote (torrentId, cb) {
+function parseTorrentRemote (torrentId, cb, dht) {
   var parsedTorrent
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
@@ -63,6 +66,29 @@ function parseTorrentRemote (torrentId, cb) {
       if (err) return cb(new Error('Error converting Blob: ' + err.message))
       parseOrThrow(torrentBuf)
     })
+  } else if (dht && /^(stream-)?magnet:/.test(torrentId)) {
+    var m = magnet(torrentId)
+    if (!m.xs) {
+      process.nextTick(function () {
+        cb(new Error('Missing xs (exact source) in magnet URI'))
+      })
+    } else {
+      if ((m = m.xs.match(/^urn:btpk:(.{64})/))) {
+        var publicKey = m[1].toLowerCase()
+        var publicKeyBuf = Buffer(publicKey, 'hex')
+        var targetId = crypto.createHash('sha1').update(publicKeyBuf).digest('hex') // XXX missing salt
+
+        dht.get(targetId, function (err, res) {
+          if (err) return cb(new Error('Error finding this publicKey in the DHT'))
+          if (!res && !res.v.ih) return cb(new Error('Found publicKey in DHT, but no torrent inside'))
+          parseOrThrow(res.v.ih)
+        })
+      } else {
+        process.nextTick(function () {
+          cb(new Error('Can\'t find publicKey in magnet URI'))
+        })
+      }
+    }
   } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
     // http, or https url to torrent file
     get.concat({
