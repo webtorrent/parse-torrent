@@ -32,6 +32,10 @@ function parseTorrent (torrentId) {
       throw new Error('Invalid torrent identifier')
     }
 
+    if (torrentObj.xs) {
+      throw new Error('Exact source magnets need to call .remote()')
+    }
+    
     return torrentObj
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // if info hash (hex/base-32 string)
