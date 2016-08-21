@@ -35,7 +35,7 @@ test('filesystem path to a torrent file, string', function (t) {
 })
 
 test('dht put/get of torrent (BEP46)', function (t) {
-  t.plan(4)
+  t.plan(6)
 
   var infoHashBuf = new Buffer(fixtures.numbers.parsedTorrent.infoHash, 'hex')
   t.equal(infoHashBuf.length, 20, 'infoHashBuf is 20 bytes')
@@ -80,7 +80,28 @@ test('dht put/get of torrent (BEP46)', function (t) {
         t.equal(infoHashBuf.toString('hex'), parsedTorrent.infoHash,
           'got back what we put in'
         )
+
+        // put a value without infohash (should throw)
+        opts.v = 'foo'
+        opts.seq++
+        dht.put(opts, function (_, hash) {
+          t.equal(
+            hash.toString('hex'),
+            expectedHash.toString('hex'),
+            'hash of the public key'
+          )
+
+          parseTorrent.remote({
+            torrentId: 'magnet:?xs=urn:btpk:' + keypair.publicKey.toString('hex'),
+            dht: dht
+          }, function (err, parsedTorrent) {
+            if (err) t.pass(err)
+
+          })
+        })
       })
     })
+
+
   })
 })
