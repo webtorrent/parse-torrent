@@ -19,7 +19,9 @@
     "simple-get": "^2.0.0"
   },
   "devDependencies": {
+    "bittorrent-dht": "^7.3.1",
     "brfs": "^1.0.0",
+    "ed25519-supercop": "^1.0.2",
     "standard": "^7.0.0",
     "tape": "^4.0.0",
     "webtorrent-fixtures": "^1.0.0",
