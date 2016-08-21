@@ -96,12 +96,10 @@ test('dht put/get of torrent (BEP46)', function (t) {
             dht: dht
           }, function (err, parsedTorrent) {
             if (err) t.pass(err)
-
+            else t.fail('should have errored')
           })
         })
       })
     })
-
-
   })
 })
