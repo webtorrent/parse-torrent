@@ -111,7 +111,7 @@ test('torrent file missing `name` field throws', function (t) {
   t.end()
 })
 
-test('torrent file missing `infoHash` field throws', function (t) {
+test('parsing `xs` should happen with .remote()', function (t) {
   t.throws(function () {
     parseTorrent('magnet:?xs=urn:btpk:8543d3e6115f0f98c944077a4493dcd543e49c739fd998550a1f614ab36ed63e')
   })
