@@ -81,7 +81,7 @@ function parseTorrentRemote (opts, cb) {
 
         opts.dht.get(targetId, function (err, res) {
           if (err) return cb(new Error('Error finding this publicKey in the DHT'))
-          if (!res && !res.v.ih) return cb(new Error('Found publicKey in DHT, but no torrent inside'))
+          if (res.v && !res.v.ih) return cb(new Error('Found publicKey in DHT, but no torrent inside'))
           parseOrThrow(res.v.ih)
         })
       } else {
