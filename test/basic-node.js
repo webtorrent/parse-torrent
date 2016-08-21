@@ -72,12 +72,15 @@ test('dht put/get of torrent (BEP46)', function (t) {
       )
 
       // should perform a dht.get
-      parseTorrent.remote('magnet:?xs=urn:btpk:' + keypair.publicKey.toString('hex'), function (err, parsedTorrent) {
+      parseTorrent.remote({
+        torrentId: 'magnet:?xs=urn:btpk:' + keypair.publicKey.toString('hex'),
+        dht: dht
+      }, function (err, parsedTorrent) {
         t.ifError(err)
         t.equal(infoHashBuf.toString('hex'), parsedTorrent.infoHash,
           'got back what we put in'
         )
-      }, dht)
+      })
     })
   })
 })
