@@ -106,4 +106,4 @@ function isBlob (obj) {
 
 // Workaround Browserify v13 bug
 // https://github.com/substack/node-browserify/issues/1483
-;(function () { Buffer(0) })()
+;(function () { new Buffer(0) })()
