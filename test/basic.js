@@ -15,7 +15,7 @@ test('Test supported torrentInfo types', function (t) {
   t.deepEqual(parsed.announce, [])
 
   // info hash (as a Buffer)
-  parsed = parseTorrent(new Buffer(fixtures.leaves.parsedTorrent.infoHash, 'hex'))
+  parsed = parseTorrent(Buffer.from(fixtures.leaves.parsedTorrent.infoHash, 'hex'))
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, undefined)
   t.deepEqual(parsed.announce, [])
