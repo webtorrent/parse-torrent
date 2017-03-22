@@ -1,4 +1,4 @@
-# parse-torrent [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url]
+# parse-torrent [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
 [travis-image]: https://img.shields.io/travis/feross/parse-torrent/master.svg
 [travis-url]: https://travis-ci.org/feross/parse-torrent
@@ -6,6 +6,8 @@
 [npm-url]: https://npmjs.org/package/parse-torrent
 [downloads-image]: https://img.shields.io/npm/dm/parse-torrent.svg
 [downloads-url]: https://npmjs.org/package/parse-torrent
+[standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
+[standard-url]: https://standardjs.com
 
 ### Parse a torrent identifier (magnet uri, .torrent file, info hash)
 
