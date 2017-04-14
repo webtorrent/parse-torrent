@@ -3,13 +3,13 @@
   "description": "Parse a torrent identifier (magnet uri, .torrent file, info hash)",
   "version": "5.8.2",
   "author": {
-    "name": "Feross Aboukhadijeh",
-    "email": "feross@feross.org",
-    "url": "http://feross.org/"
+    "name": "WebTorrent, LLC",
+    "email": "feross@webtorrent.io",
+    "url": "https://webtorrent.io"
   },
   "bin": "./bin/cmd.js",
   "bugs": {
-    "url": "https://github.com/feross/parse-torrent/issues"
+    "url": "https://github.com/webtorrent/parse-torrent/issues"
   },
   "dependencies": {
     "blob-to-buffer": "^1.2.6",
@@ -26,7 +26,6 @@
     "xtend": "^4.0.0",
     "zuul": "^3.0.0"
   },
-  "homepage": "https://github.com/feross/parse-torrent",
   "keywords": [
     ".torrent",
     "bittorrent",
@@ -40,15 +39,12 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/feross/parse-torrent.git"
+    "url": "git://github.com/webtorrent/parse-torrent.git"
   },
   "scripts": {
     "test": "standard && npm run test-node && npm run test-browser",
     "test-browser": "zuul -- test/basic.js",
     "test-browser-local": "zuul --local -- test/basic.js",
     "test-node": "tape test/*.js"
-  },
-  "testling": {
-    "files": "test/*.js"
   }
 }
