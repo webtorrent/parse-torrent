@@ -41,6 +41,9 @@
     "type": "git",
     "url": "git://github.com/webtorrent/parse-torrent.git"
   },
+  "engines": {
+    "node": ">= 5.0.0"
+  },
   "scripts": {
     "test": "standard && npm run test-node && npm run test-browser",
     "test-browser": "zuul -- test/basic.js",
