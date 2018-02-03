@@ -1,4 +1,4 @@
-# parse-torrent [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url] [![Greenkeeper badge][greenkeeper-image]][greenkeeper-url]
+# parse-torrent [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
 [travis-image]: https://img.shields.io/travis/webtorrent/parse-torrent/master.svg
 [travis-url]: https://travis-ci.org/webtorrent/parse-torrent
@@ -8,8 +8,6 @@
 [downloads-url]: https://npmjs.org/package/parse-torrent
 [standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
 [standard-url]: https://standardjs.com
-[greenkeeper-image]: https://badges.greenkeeper.io/webtorrent/parse-torrent.svg
-[greenkeeper-url]: https://greenkeeper.io/
 
 ### Parse a torrent identifier (magnet uri, .torrent file, info hash)
 
