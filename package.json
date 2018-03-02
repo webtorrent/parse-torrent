@@ -19,12 +19,12 @@
     "simple-get": "^2.0.0"
   },
   "devDependencies": {
+    "airtap": "0.0.4",
     "brfs": "^1.0.0",
     "standard": "*",
     "tape": "^4.0.0",
     "webtorrent-fixtures": "^1.0.0",
-    "xtend": "^4.0.0",
-    "zuul": "^3.0.0"
+    "xtend": "^4.0.0"
   },
   "keywords": [
     ".torrent",
@@ -43,8 +43,8 @@
   },
   "scripts": {
     "test": "standard && npm run test-node && npm run test-browser",
-    "test-browser": "zuul -- test/basic.js",
-    "test-browser-local": "zuul --local -- test/basic.js",
+    "test-browser": "airtap -- test/basic.js",
+    "test-browser-local": "airtap --local -- test/basic.js",
     "test-node": "tape test/*.js"
   }
 }
