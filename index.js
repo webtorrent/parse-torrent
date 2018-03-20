@@ -47,7 +47,7 @@ function parseTorrent (torrentId) {
 }
 
 function parseTorrentRemote (opts, cb) {
-  var torrentId = typeof opts === 'object' ? opts.torrentId : opts
+  var torrentId = (typeof opts === 'object' && !isBlob(opts)) ? opts.torrentId : opts
   var parsedTorrent
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
@@ -76,7 +76,7 @@ function parseTorrentRemote (opts, cb) {
     } else {
       if ((m = m.xs.match(/^urn:btpk:(.{64})/))) {
         var publicKey = m[1].toLowerCase()
-        var publicKeyBuf = Buffer(publicKey, 'hex')
+        var publicKeyBuf = Buffer.from(publicKey, 'hex')
         var targetId = crypto.createHash('sha1').update(publicKeyBuf).digest('hex') // XXX missing salt
 
         opts.dht.get(targetId, function (err, res) {

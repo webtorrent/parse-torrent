@@ -37,7 +37,7 @@ test('filesystem path to a torrent file, string', function (t) {
 test('dht put/get of torrent (BEP46)', function (t) {
   t.plan(6)
 
-  var infoHashBuf = new Buffer(fixtures.numbers.parsedTorrent.infoHash, 'hex')
+  var infoHashBuf = Buffer.from(fixtures.numbers.parsedTorrent.infoHash, 'hex')
   t.equal(infoHashBuf.length, 20, 'infoHashBuf is 20 bytes')
 
   var keypair = ed.createKeyPair(ed.createSeed())
