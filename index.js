@@ -35,7 +35,7 @@ function parseTorrent (torrentId) {
     if (torrentObj.xs) {
       throw new Error('Exact source magnets need to call .remote()')
     }
-    
+
     return torrentObj
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // if info hash (hex/base-32 string)
@@ -86,16 +86,17 @@ function parseTorrentRemote (torrentId, opts, cb) {
       parseOrThrow(torrentBuf)
     })
   } else if (opts.dht && /^(stream-)?magnet:/.test(torrentId)) {
-    var m = magnet(torrentId)
+    const m = magnet(torrentId)
     if (!m.xs) {
       process.nextTick(function () {
         cb(new Error('Missing xs (exact source) in magnet URI'))
       })
     } else {
-      if ((m = m.xs.match(/^urn:btpk:(.{64})/))) {
-        var publicKey = m[1].toLowerCase()
-        var publicKeyBuf = Buffer(publicKey, 'hex')
-        var targetId = crypto.createHash('sha1').update(publicKeyBuf).digest('hex') // XXX missing salt
+      const match = m.xs.match(/^urn:btpk:(.{64})/)
+      if (match) {
+        const publicKey = match[1].toLowerCase()
+        const publicKeyBuf = Buffer.from(publicKey, 'hex')
+        const targetId = crypto.createHash('sha1').update(publicKeyBuf).digest('hex') // XXX missing salt
 
         opts.dht.get(targetId, function (err, res) {
           if (err) return cb(new Error('Error finding this publicKey in the DHT'))

@@ -22,7 +22,8 @@
     "queue-microtask": "^1.2.3",
     "simple-get": "^4.0.1",
     "simple-sha1": "^3.1.0",
-    "bittorrent-dht": "^7.3.1"
+    "bittorrent-dht": "^7.3.1",
+    "ed25519-supercop": "^2.0.1"
   },
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.7",
