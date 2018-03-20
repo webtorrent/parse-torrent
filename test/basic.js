@@ -111,6 +111,13 @@ test('torrent file missing `name` field throws', function (t) {
   t.end()
 })
 
+test('parsing `xs` should happen with .remote()', function (t) {
+  t.throws(function () {
+    parseTorrent('magnet:?xs=urn:btpk:8543d3e6115f0f98c944077a4493dcd543e49c739fd998550a1f614ab36ed63e')
+  })
+  t.end()
+})
+
 test('parse url-list for webseed support', function (t) {
   var torrent = parseTorrent(fixtures.bunny.torrent)
   t.deepEqual(torrent.urlList, [ 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_stereo_abl.mp4' ])
