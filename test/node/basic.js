@@ -1,6 +1,6 @@
 var fixtures = require('webtorrent-fixtures')
 var http = require('http')
-var parseTorrent = require('../')
+var parseTorrent = require('../../')
 var test = require('tape')
 
 test('http url to a torrent file, string', function (t) {

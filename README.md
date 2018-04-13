@@ -30,6 +30,7 @@ torrent. The only property that is guaranteed to be present is `infoHash`.
 
 ```js
 var parseTorrent = require('parse-torrent')
+var fs = require('fs')
 
 // info hash (as a hex string)
 parseTorrent('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36')
