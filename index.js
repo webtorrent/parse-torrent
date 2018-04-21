@@ -35,6 +35,7 @@ function parseTorrent (torrentId) {
     return decodeTorrentFile(torrentId) // might throw
   } else if (torrentId && torrentId.infoHash) {
     // parsed torrent (from `parse-torrent` or `magnet-uri`)
+    torrentId.infoHash = torrentId.infoHash.toLowerCase()
     if (!torrentId.announce) torrentId.announce = []
     if (typeof torrentId.announce === 'string') {
       torrentId.announce = [ torrentId.announce ]
