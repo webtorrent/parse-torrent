@@ -1,1 +1,3 @@
-test/torrents
+.travis.yml
+.airtap.yml
+test/
