@@ -208,8 +208,8 @@ function encodeTorrentFile (parsed) {
 
   torrent['url-list'] = parsed.urlList || []
 
-  if (parsed.private === true || parsed.private === false) {
-    torrent['private'] = parsed.private
+  if (parsed.private !== undefined) {
+    torrent['private'] = Number(parsed.private)
   }
 
   if (parsed.created) {
