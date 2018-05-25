@@ -208,11 +208,8 @@ function encodeTorrentFile (parsed) {
 
   torrent['url-list'] = parsed.urlList || []
 
-  if (parsed.private === true || parsed.private === false) {
-    // Cast boolean to integer 1 or 0; BitTorrent's bencoding can't encode
-    // booleans.
-    var privateAsInteger = parsed.private & 1
-    torrent['private'] = privateAsInteger
+  if (parsed.private !== undefined) {
+    torrent['private'] = Number(parsed.private)
   }
 
   if (parsed.created) {
