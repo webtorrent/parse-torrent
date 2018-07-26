@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "airtap": "0.1.0",
-    "brfs": "^1.0.0",
+    "brfs": "^2.0.0",
     "standard": "*",
     "tape": "^4.0.0",
     "webtorrent-fixtures": "^1.0.0",
