@@ -29,8 +29,8 @@ The return value of `parseTorrent` will contain as much info as possible about t
 torrent. The only property that is guaranteed to be present is `infoHash`.
 
 ```js
-var parseTorrent = require('parse-torrent')
-var fs = require('fs')
+const parseTorrent = require('parse-torrent')
+const fs = require('fs')
 
 // info hash (as a hex string)
 parseTorrent('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36')
@@ -115,14 +115,14 @@ The reverse works too. To convert an object of keys/value to a magnet uri or .to
 buffer, use `toMagnetURI` and `toTorrentFile`.
 
 ```js
-var parseTorrent = require('parse-torrent')
+const parseTorrent = require('parse-torrent')
 
-var uri = parseTorrent.toMagnetURI({
+const uri = parseTorrent.toMagnetURI({
   infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36'
 })
 console.log(uri) // 'magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'
 
-var buf = parseTorrent.toTorrentFile({
+const buf = parseTorrent.toTorrentFile({
   info: {
     /* ... */
   }
@@ -137,7 +137,7 @@ filesystem paths), as well as Blobs use the `parseTorrent.remote` function. It t
 a callback since these torrent types require async operations:
 
 ```js
-parseTorrent.remote(torrentId, function (err, parsedTorrent) {
+parseTorrent.remote(torrentId, (err, parsedTorrent) => {
   if (err) throw err
   console.log(parsedTorrent)
 })

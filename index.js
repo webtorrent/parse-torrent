@@ -1,13 +1,13 @@
 /* global Blob */
 
-var bencode = require('bencode')
-var blobToBuffer = require('blob-to-buffer')
-var fs = require('fs') // browser exclude
-var get = require('simple-get')
-var magnet = require('magnet-uri')
-var path = require('path')
-var sha1 = require('simple-sha1')
-var uniq = require('uniq')
+const bencode = require('bencode');
+const blobToBuffer = require('blob-to-buffer');
+const fs = require('fs'); // browser exclude
+const get = require('simple-get');
+const magnet = require('magnet-uri');
+const path = require('path');
+const sha1 = require('simple-sha1');
+const uniq = require('uniq');
 
 module.exports = parseTorrent
 module.exports.remote = parseTorrentRemote
@@ -48,7 +48,7 @@ function parseTorrent (torrentId) {
 }
 
 function parseTorrentRemote (torrentId, cb) {
-  var parsedTorrent
+  let parsedTorrent;
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
   try {
@@ -125,7 +125,7 @@ function decodeTorrentFile (torrent) {
     ensure(typeof torrent.info.length === 'number', 'info.length')
   }
 
-  var result = {}
+  const result = {};
   result.info = torrent.info
   result.infoBuffer = bencode.encode(torrent.info)
   result.infoHash = sha1.sync(result.infoBuffer)
@@ -166,11 +166,11 @@ function decodeTorrentFile (torrent) {
   uniq(result.announce)
   uniq(result.urlList)
 
-  var files = torrent.info.files || [ torrent.info ]
+  const files = torrent.info.files || [ torrent.info ];
   result.files = files.map(function (file, i) {
-    var parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(function (p) {
+    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(function (p) {
       return p.toString()
-    })
+    });
     return {
       path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
       name: parts[parts.length - 1],
@@ -181,7 +181,7 @@ function decodeTorrentFile (torrent) {
 
   result.length = files.reduce(sumLength, 0)
 
-  var lastFile = result.files[result.files.length - 1]
+  const lastFile = result.files[result.files.length - 1];
 
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
@@ -196,9 +196,9 @@ function decodeTorrentFile (torrent) {
  * @return {Buffer}
  */
 function encodeTorrentFile (parsed) {
-  var torrent = {
+  const torrent = {
     info: parsed.info
-  }
+  };
 
   torrent['announce-list'] = (parsed.announce || []).map(function (url) {
     if (!torrent.announce) torrent.announce = url
@@ -241,8 +241,8 @@ function sumLength (sum, file) {
 }
 
 function splitPieces (buf) {
-  var pieces = []
-  for (var i = 0; i < buf.length; i += 20) {
+  const pieces = [];
+  for (let i = 0; i < buf.length; i += 20) {
     pieces.push(buf.slice(i, i + 20).toString('hex'))
   }
   return pieces
