@@ -1,15 +1,15 @@
-var fs = require('fs')
-var parseTorrent = require('../')
-var path = require('path')
-var test = require('tape')
+const fs = require('fs')
+const parseTorrent = require('../')
+const path = require('path')
+const test = require('tape')
 
-var leavesDuplicateTracker = fs.readFileSync(path.join(__dirname, 'torrents/leaves-duplicate-tracker.torrent'))
+const leavesDuplicateTracker = fs.readFileSync(path.join(__dirname, 'torrents/leaves-duplicate-tracker.torrent'))
 
-var expectedAnnounce = [
+const expectedAnnounce = [
   'http://tracker.example.com/announce'
 ]
 
-test('dedupe announce list', function (t) {
+test('dedupe announce list', t => {
   t.deepEqual(parseTorrent(leavesDuplicateTracker).announce, expectedAnnounce)
   t.end()
 })

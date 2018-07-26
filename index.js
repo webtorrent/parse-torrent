@@ -1,13 +1,13 @@
 /* global Blob */
 
-const bencode = require('bencode');
-const blobToBuffer = require('blob-to-buffer');
-const fs = require('fs'); // browser exclude
-const get = require('simple-get');
-const magnet = require('magnet-uri');
-const path = require('path');
-const sha1 = require('simple-sha1');
-const uniq = require('uniq');
+const bencode = require('bencode')
+const blobToBuffer = require('blob-to-buffer')
+const fs = require('fs') // browser exclude
+const get = require('simple-get')
+const magnet = require('magnet-uri')
+const path = require('path')
+const sha1 = require('simple-sha1')
+const uniq = require('uniq')
 
 module.exports = parseTorrent
 module.exports.remote = parseTorrentRemote
@@ -26,10 +26,10 @@ function parseTorrent (torrentId) {
     return magnet(torrentId)
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // info hash (hex/base-32 string)
-    return magnet('magnet:?xt=urn:btih:' + torrentId)
+    return magnet(`magnet:?xt=urn:btih:${torrentId}`)
   } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
     // info hash (buffer)
-    return magnet('magnet:?xt=urn:btih:' + torrentId.toString('hex'))
+    return magnet(`magnet:?xt=urn:btih:${torrentId.toString('hex')}`)
   } else if (Buffer.isBuffer(torrentId)) {
     // .torrent file (buffer)
     return decodeTorrentFile(torrentId) // might throw
@@ -48,7 +48,7 @@ function parseTorrent (torrentId) {
 }
 
 function parseTorrentRemote (torrentId, cb) {
-  let parsedTorrent;
+  let parsedTorrent
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
   try {
@@ -59,12 +59,12 @@ function parseTorrentRemote (torrentId, cb) {
   }
 
   if (parsedTorrent && parsedTorrent.infoHash) {
-    process.nextTick(function () {
+    process.nextTick(() => {
       cb(null, parsedTorrent)
     })
   } else if (isBlob(torrentId)) {
-    blobToBuffer(torrentId, function (err, torrentBuf) {
-      if (err) return cb(new Error('Error converting Blob: ' + err.message))
+    blobToBuffer(torrentId, (err, torrentBuf) => {
+      if (err) return cb(new Error(`Error converting Blob: ${err.message}`))
       parseOrThrow(torrentBuf)
     })
   } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
@@ -73,18 +73,18 @@ function parseTorrentRemote (torrentId, cb) {
       url: torrentId,
       timeout: 30 * 1000,
       headers: { 'user-agent': 'WebTorrent (https://webtorrent.io)' }
-    }, function (err, res, torrentBuf) {
-      if (err) return cb(new Error('Error downloading torrent: ' + err.message))
+    }, (err, res, torrentBuf) => {
+      if (err) return cb(new Error(`Error downloading torrent: ${err.message}`))
       parseOrThrow(torrentBuf)
     })
   } else if (typeof fs.readFile === 'function' && typeof torrentId === 'string') {
     // assume it's a filesystem path
-    fs.readFile(torrentId, function (err, torrentBuf) {
+    fs.readFile(torrentId, (err, torrentBuf) => {
       if (err) return cb(new Error('Invalid torrent identifier'))
       parseOrThrow(torrentBuf)
     })
   } else {
-    process.nextTick(function () {
+    process.nextTick(() => {
       cb(new Error('Invalid torrent identifier'))
     })
   }
@@ -117,7 +117,7 @@ function decodeTorrentFile (torrent) {
   ensure(torrent.info.pieces, 'info.pieces')
 
   if (torrent.info.files) {
-    torrent.info.files.forEach(function (file) {
+    torrent.info.files.forEach(file => {
       ensure(typeof file.length === 'number', 'info.files[0].length')
       ensure(file['path.utf-8'] || file.path, 'info.files[0].path')
     })
@@ -125,13 +125,15 @@ function decodeTorrentFile (torrent) {
     ensure(typeof torrent.info.length === 'number', 'info.length')
   }
 
-  const result = {};
-  result.info = torrent.info
-  result.infoBuffer = bencode.encode(torrent.info)
+  const result = {
+    info: torrent.info,
+    infoBuffer: bencode.encode(torrent.info),
+    name: (torrent.info['name.utf-8'] || torrent.info.name).toString(),
+    announce: []
+  }
+
   result.infoHash = sha1.sync(result.infoBuffer)
   result.infoHashBuffer = Buffer.from(result.infoHash, 'hex')
-
-  result.name = (torrent.info['name.utf-8'] || torrent.info.name).toString()
 
   if (torrent.info.private !== undefined) result.private = !!torrent.info.private
 
@@ -141,10 +143,9 @@ function decodeTorrentFile (torrent) {
   if (Buffer.isBuffer(torrent.comment)) result.comment = torrent.comment.toString()
 
   // announce and announce-list will be missing if metadata fetched via ut_metadata
-  result.announce = []
   if (Array.isArray(torrent['announce-list']) && torrent['announce-list'].length > 0) {
-    torrent['announce-list'].forEach(function (urls) {
-      urls.forEach(function (url) {
+    torrent['announce-list'].forEach(urls => {
+      urls.forEach(url => {
         result.announce.push(url.toString())
       })
     })
@@ -159,18 +160,14 @@ function decodeTorrentFile (torrent) {
       ? [ torrent['url-list'] ]
       : []
   }
-  result.urlList = (torrent['url-list'] || []).map(function (url) {
-    return url.toString()
-  })
+  result.urlList = (torrent['url-list'] || []).map(url => url.toString())
 
   uniq(result.announce)
   uniq(result.urlList)
 
-  const files = torrent.info.files || [ torrent.info ];
-  result.files = files.map(function (file, i) {
-    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(function (p) {
-      return p.toString()
-    });
+  const files = torrent.info.files || [ torrent.info ]
+  result.files = files.map((file, i) => {
+    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => p.toString())
     return {
       path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
       name: parts[parts.length - 1],
@@ -181,7 +178,7 @@ function decodeTorrentFile (torrent) {
 
   result.length = files.reduce(sumLength, 0)
 
-  const lastFile = result.files[result.files.length - 1];
+  const lastFile = result.files[result.files.length - 1]
 
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
@@ -198,9 +195,9 @@ function decodeTorrentFile (torrent) {
 function encodeTorrentFile (parsed) {
   const torrent = {
     info: parsed.info
-  };
+  }
 
-  torrent['announce-list'] = (parsed.announce || []).map(function (url) {
+  torrent['announce-list'] = (parsed.announce || []).map(url => {
     if (!torrent.announce) torrent.announce = url
     url = Buffer.from(url, 'utf8')
     return [ url ]
@@ -241,7 +238,7 @@ function sumLength (sum, file) {
 }
 
 function splitPieces (buf) {
-  const pieces = [];
+  const pieces = []
   for (let i = 0; i < buf.length; i += 20) {
     pieces.push(buf.slice(i, i + 20).toString('hex'))
   }
@@ -249,9 +246,9 @@ function splitPieces (buf) {
 }
 
 function ensure (bool, fieldName) {
-  if (!bool) throw new Error('Torrent is missing required field: ' + fieldName)
+  if (!bool) throw new Error(`Torrent is missing required field: ${fieldName}`)
 }
 
 // Workaround Browserify v13 bug
 // https://github.com/substack/node-browserify/issues/1483
-;(function () { Buffer.alloc(0) })()
+;((() => { Buffer.alloc(0) }))()

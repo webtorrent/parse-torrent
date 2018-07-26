@@ -1,11 +1,11 @@
-var fs = require('fs')
-var parseTorrent = require('../')
-var path = require('path')
-var test = require('tape')
+const fs = require('fs')
+const parseTorrent = require('../')
+const path = require('path')
+const test = require('tape')
 
-var bitloveIntro = fs.readFileSync(path.join(__dirname, 'torrents/bitlove-intro.torrent'))
+const bitloveIntro = fs.readFileSync(path.join(__dirname, 'torrents/bitlove-intro.torrent'))
 
-var bitloveParsed = {
+const bitloveParsed = {
   infoHash: '4cb67059ed6bd08362da625b3ae77f6f4a075705',
   infoHashBuffer: Buffer.from('4cb67059ed6bd08362da625b3ae77f6f4a075705', 'hex'),
   name: 'bl001-introduction.webm',
@@ -56,7 +56,7 @@ var bitloveParsed = {
   infoBuffer: Buffer.from('ZDY6bGVuZ3RoaTE5MjExNzI5ZTQ6bmFtZTIzOmJsMDAxLWludHJvZHVjdGlvbi53ZWJtMTI6cGllY2UgbGVuZ3RoaTEwNDg1NzZlNjpwaWVjZXMzODA6kKddzU6I0ofHrFWZwQj2A2wTxM4e9UaL3/mkRmrU5EZHeYHLZ9B5Mx+pEaZjRRKAlT7bcj5nYRlX3A/hKrrWBm4pxyPwGwkI7DDg5zdRSohVr9qOFKRef3l+tHuCstCjsspfNn4fSVk1Fcobk60Bw+4FDjXwT1wuFbmrsSMigALMpqfYj8n8mdJFg+EycEoCDS8SG/xhK3YnzZLis5rUPDW+uyiI9xQ8KWa7TV904Lh1glhWaHX0uxqfpjHuNbzXRpsej/N9ZaLLvu6twUjtaBtpnoipQPeW9RwJFcaRIcgdhQVWeL8Zi7KfyeUE7Yx/fjhjxuHGqMgkVp8cwJUEmNzrA8SrTnfa3l9UJGVZxAkVtwCk9zTO4JLEe+LTl6+/BqnppXOmOjxoPSqlAa0hKhSVIIt/+7FzzleCKRaVZSs/YjO/TqNknHeZoYSPBsrel5h1Jds3x5nkW9Avwl6swS4YxsEbTaP7THPfkwezk5/sPNXw3xecUKScbKNl', 'base64')
 }
 
-test('parse torrent with no announce-list', function (t) {
+test('parse torrent with no announce-list', t => {
   t.deepEquals(parseTorrent(bitloveIntro), bitloveParsed)
   t.end()
 })

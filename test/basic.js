@@ -1,12 +1,12 @@
 /* global Blob */
 
-var extend = require('xtend')
-var fixtures = require('webtorrent-fixtures')
-var parseTorrent = require('../')
-var test = require('tape')
+const extend = require('xtend')
+const fixtures = require('webtorrent-fixtures')
+const parseTorrent = require('../')
+const test = require('tape')
 
-test('Test supported torrentInfo types', function (t) {
-  var parsed
+test('Test supported torrentInfo types', t => {
+  let parsed
 
   // info hash (as a hex string)
   parsed = parseTorrent(fixtures.leaves.parsedTorrent.infoHash)
@@ -21,27 +21,27 @@ test('Test supported torrentInfo types', function (t) {
   t.deepEqual(parsed.announce, [])
 
   // magnet uri (as a utf8 string)
-  var magnet = 'magnet:?xt=urn:btih:' + fixtures.leaves.parsedTorrent.infoHash
+  const magnet = `magnet:?xt=urn:btih:${fixtures.leaves.parsedTorrent.infoHash}`
   parsed = parseTorrent(magnet)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, undefined)
   t.deepEqual(parsed.announce, [])
 
   // stream-magnet uri (as a utf8 string)
-  var streamMagnet = 'stream-magnet:?xt=urn:btih:' + fixtures.leaves.parsedTorrent.infoHash
+  const streamMagnet = `stream-magnet:?xt=urn:btih:${fixtures.leaves.parsedTorrent.infoHash}`
   parsed = parseTorrent(streamMagnet)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, undefined)
   t.deepEqual(parsed.announce, [])
 
   // magnet uri with name
-  parsed = parseTorrent(magnet + '&dn=' + encodeURIComponent(fixtures.leaves.parsedTorrent.name))
+  parsed = parseTorrent(`${magnet}&dn=${encodeURIComponent(fixtures.leaves.parsedTorrent.name)}`)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, fixtures.leaves.parsedTorrent.name)
   t.deepEqual(parsed.announce, [])
 
   // magnet uri with trackers
-  parsed = parseTorrent(magnet + '&tr=' + encodeURIComponent('udp://tracker.example.com:80'))
+  parsed = parseTorrent(`${magnet}&tr=${encodeURIComponent('udp://tracker.example.com:80')}`)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, undefined)
   t.deepEqual(parsed.announce, [ 'udp://tracker.example.com:80' ])
@@ -59,7 +59,7 @@ test('Test supported torrentInfo types', function (t) {
   t.deepEqual(parsed.announce, fixtures.leaves.parsedTorrent.announce)
 
   // parsed torrent (as an Object), with string 'announce' property
-  var leavesParsedModified = extend(fixtures.leaves.parsedTorrent, { announce: 'udp://tracker.example.com:80' })
+  let leavesParsedModified = extend(fixtures.leaves.parsedTorrent, { announce: 'udp://tracker.example.com:80' })
   parsed = parseTorrent(leavesParsedModified)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, fixtures.leaves.parsedTorrent.name)
@@ -87,16 +87,16 @@ test('Test supported torrentInfo types', function (t) {
   t.end()
 })
 
-test('parse single file torrent', function (t) {
-  var parsed = parseTorrent(fixtures.leaves.torrent)
+test('parse single file torrent', t => {
+  const parsed = parseTorrent(fixtures.leaves.torrent)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, fixtures.leaves.parsedTorrent.name)
   t.deepEquals(parsed.announce, fixtures.leaves.parsedTorrent.announce)
   t.end()
 })
 
-test('parse multiple file torrent', function (t) {
-  var parsed = parseTorrent(fixtures.numbers.torrent)
+test('parse multiple file torrent', t => {
+  const parsed = parseTorrent(fixtures.numbers.torrent)
   t.equal(parsed.infoHash, fixtures.numbers.parsedTorrent.infoHash)
   t.equal(parsed.name, fixtures.numbers.parsedTorrent.name)
   t.deepEquals(parsed.files, fixtures.numbers.parsedTorrent.files)
@@ -104,20 +104,20 @@ test('parse multiple file torrent', function (t) {
   t.end()
 })
 
-test('torrent file missing `name` field throws', function (t) {
-  t.throws(function () {
+test('torrent file missing `name` field throws', t => {
+  t.throws(() => {
     parseTorrent(fixtures.invalid.torrent)
   })
   t.end()
 })
 
-test('parse url-list for webseed support', function (t) {
-  var torrent = parseTorrent(fixtures.bunny.torrent)
+test('parse url-list for webseed support', t => {
+  const torrent = parseTorrent(fixtures.bunny.torrent)
   t.deepEqual(torrent.urlList, [ 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_stereo_abl.mp4' ])
   t.end()
 })
 
-test('parse single file torrent from Blob', function (t) {
+test('parse single file torrent from Blob', t => {
   if (typeof Blob === 'undefined') {
     t.pass('Skipping Blob test')
     t.end()
@@ -125,8 +125,8 @@ test('parse single file torrent from Blob', function (t) {
   }
 
   t.plan(4)
-  var leavesBlob = makeBlobShim(fixtures.leaves.torrent)
-  parseTorrent.remote(leavesBlob, function (err, parsed) {
+  const leavesBlob = makeBlobShim(fixtures.leaves.torrent)
+  parseTorrent.remote(leavesBlob, (err, parsed) => {
     t.error(err)
     t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
     t.equal(parsed.name, fixtures.leaves.parsedTorrent.name)
@@ -135,7 +135,7 @@ test('parse single file torrent from Blob', function (t) {
 })
 
 function makeBlobShim (buf, name) {
-  var file = new Blob([ buf ])
+  const file = new Blob([ buf ])
   file.name = name
   return file
 }

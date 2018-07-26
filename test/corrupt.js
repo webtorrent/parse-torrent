@@ -1,9 +1,9 @@
-var fixtures = require('webtorrent-fixtures')
-var parseTorrent = require('../')
-var test = require('tape')
+const fixtures = require('webtorrent-fixtures')
+const parseTorrent = require('../')
+const test = require('tape')
 
-test('exception thrown when torrent file is missing `name` field', function (t) {
-  t.throws(function () {
+test('exception thrown when torrent file is missing `name` field', t => {
+  t.throws(() => {
     parseTorrent(fixtures.corrupt.torrent)
   })
   t.end()
