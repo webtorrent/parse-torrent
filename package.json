@@ -21,7 +21,6 @@
     "simple-get": "^3.0.1"
   },
   "devDependencies": {
-    "airtap": "0.1.0",
     "brfs": "^2.0.0",
     "standard": "*",
     "tape": "^4.0.0",
@@ -44,9 +43,6 @@
     "url": "git://github.com/webtorrent/parse-torrent.git"
   },
   "scripts": {
-    "test": "standard && npm run test-node && npm run test-browser",
-    "test-browser": "airtap -- test/*.js",
-    "test-browser-local": "airtap --local -- test/*.js",
-    "test-node": "tape test/*.js test/node/*.js"
+    "test": "standard && tape test/*.js test/node/*.js"
   }
 }
