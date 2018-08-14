@@ -8,6 +8,7 @@ const magnet = require('magnet-uri')
 const path = require('path')
 const sha1 = require('simple-sha1')
 const uniq = require('uniq')
+const toHex = (memo, n) => memo + (n < 16 ? '0' : '') + n.toString(16)
 
 module.exports = parseTorrent
 module.exports.remote = parseTorrentRemote
@@ -21,18 +22,22 @@ module.exports.toTorrentFile = encodeTorrentFile
  * @return {Object}
  */
 function parseTorrent (torrentId) {
+  if (torrentId instanceof ArrayBuffer || ArrayBuffer.isView(torrentId)) {
+    torrentId = new Uint8Array(torrentId)
+  }
+
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
     // magnet uri (string)
     return magnet(torrentId)
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // info hash (hex/base-32 string)
     return magnet(`magnet:?xt=urn:btih:${torrentId}`)
-  } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
-    // info hash (buffer)
-    return magnet(`magnet:?xt=urn:btih:${torrentId.toString('hex')}`)
-  } else if (Buffer.isBuffer(torrentId)) {
-    // .torrent file (buffer)
-    return decodeTorrentFile(torrentId) // might throw
+  } else if (ArrayBuffer.isView(torrentId)) {
+    return torrentId.byteLength === 20
+      // info hash (buffer)
+      ? magnet(torrentId.reduce(toHex, 'magnet:?xt=urn:btih:'))
+      // .torrent file (buffer)
+      : decodeTorrentFile(torrentId) // might throw
   } else if (torrentId && torrentId.infoHash) {
     // parsed torrent (from `parse-torrent` or `magnet-uri`)
     torrentId.infoHash = torrentId.infoHash.toLowerCase()
@@ -106,7 +111,7 @@ function parseTorrentRemote (torrentId, cb) {
  * @return {Object}        parsed torrent
  */
 function decodeTorrentFile (torrent) {
-  if (Buffer.isBuffer(torrent)) {
+  if (ArrayBuffer.isView(torrent)) {
     torrent = bencode.decode(torrent)
   }
 
