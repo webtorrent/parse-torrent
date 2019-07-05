@@ -44,7 +44,7 @@ test('Test supported torrentInfo types', t => {
   parsed = parseTorrent(`${magnet}&tr=${encodeURIComponent('udp://tracker.example.com:80')}`)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, undefined)
-  t.deepEqual(parsed.announce, [ 'udp://tracker.example.com:80' ])
+  t.deepEqual(parsed.announce, ['udp://tracker.example.com:80'])
 
   // .torrent file (as a Buffer)
   parsed = parseTorrent(fixtures.leaves.torrent)
@@ -63,11 +63,11 @@ test('Test supported torrentInfo types', t => {
   parsed = parseTorrent(leavesParsedModified)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
   t.equal(parsed.name, fixtures.leaves.parsedTorrent.name)
-  t.deepEqual(parsed.announce, [ 'udp://tracker.example.com:80' ])
+  t.deepEqual(parsed.announce, ['udp://tracker.example.com:80'])
 
   // parsed torrent (as an Object), with array 'announce' property
   leavesParsedModified = extend(fixtures.leaves.parsedTorrent, {
-    announce: [ 'udp://tracker.example.com:80', 'udp://tracker.example.com:81' ]
+    announce: ['udp://tracker.example.com:80', 'udp://tracker.example.com:81']
   })
   parsed = parseTorrent(leavesParsedModified)
   t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
@@ -113,7 +113,7 @@ test('torrent file missing `name` field throws', t => {
 
 test('parse url-list for webseed support', t => {
   const torrent = parseTorrent(fixtures.bunny.torrent)
-  t.deepEqual(torrent.urlList, [ 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_stereo_abl.mp4' ])
+  t.deepEqual(torrent.urlList, ['http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_stereo_abl.mp4'])
   t.end()
 })
 
@@ -135,7 +135,7 @@ test('parse single file torrent from Blob', t => {
 })
 
 function makeBlobShim (buf, name) {
-  const file = new Blob([ buf ])
+  const file = new Blob([buf])
   file.name = name
   return file
 }

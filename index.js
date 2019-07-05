@@ -38,7 +38,7 @@ function parseTorrent (torrentId) {
     torrentId.infoHash = torrentId.infoHash.toLowerCase()
     if (!torrentId.announce) torrentId.announce = []
     if (typeof torrentId.announce === 'string') {
-      torrentId.announce = [ torrentId.announce ]
+      torrentId.announce = [torrentId.announce]
     }
     if (!torrentId.urlList) torrentId.urlList = []
     return torrentId
@@ -157,7 +157,7 @@ function decodeTorrentFile (torrent) {
   if (Buffer.isBuffer(torrent['url-list'])) {
     // some clients set url-list to empty string
     torrent['url-list'] = torrent['url-list'].length > 0
-      ? [ torrent['url-list'] ]
+      ? [torrent['url-list']]
       : []
   }
   result.urlList = (torrent['url-list'] || []).map(url => url.toString())
@@ -165,7 +165,7 @@ function decodeTorrentFile (torrent) {
   uniq(result.announce)
   uniq(result.urlList)
 
-  const files = torrent.info.files || [ torrent.info ]
+  const files = torrent.info.files || [torrent.info]
   result.files = files.map((file, i) => {
     const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => p.toString())
     return {
@@ -200,7 +200,7 @@ function encodeTorrentFile (parsed) {
   torrent['announce-list'] = (parsed.announce || []).map(url => {
     if (!torrent.announce) torrent.announce = url
     url = Buffer.from(url, 'utf8')
-    return [ url ]
+    return [url]
   })
 
   torrent['url-list'] = parsed.urlList || []
