@@ -17,10 +17,10 @@ const bitloveParsed = {
   ],
   files: [
     {
-      'path': 'bl001-introduction.webm',
-      'name': 'bl001-introduction.webm',
-      'length': 19211729,
-      'offset': 0
+      path: 'bl001-introduction.webm',
+      name: 'bl001-introduction.webm',
+      length: 19211729,
+      offset: 0
     }
   ],
   length: 19211729,
