@@ -206,7 +206,7 @@ function encodeTorrentFile (parsed) {
   torrent['url-list'] = parsed.urlList || []
 
   if (parsed.private !== undefined) {
-    torrent['private'] = Number(parsed.private)
+    torrent.private = Number(parsed.private)
   }
 
   if (parsed.created) {
