@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-var stdin = require('get-stdin')
-var parseTorrent = require('../')
+const stdin = require('get-stdin')
+const parseTorrent = require('../')
 
 function usage () {
   console.error('Usage: parse-torrent /path/to/torrent')
@@ -14,7 +14,7 @@ function error (err) {
   process.exit(1)
 }
 
-var arg = process.argv[2]
+const arg = process.argv[2]
 
 if (!arg) {
   console.error('Missing required argument')
