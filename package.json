@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bencode": "^2.0.0",
-    "simple-sha1": "^2.0.0",
+    "simple-sha1": "^3.0.0",
     "uniq": "^1.0.1",
     "blob-to-buffer": "^1.2.6",
     "get-stdin": "^7.0.0",
