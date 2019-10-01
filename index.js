@@ -47,7 +47,7 @@ function parseTorrent (torrentId) {
   }
 }
 
-function parseTorrentRemote (torrentId, cb, options) {
+function parseTorrentRemote (torrentId, cb, opts) {
   let parsedTorrent
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
@@ -69,12 +69,12 @@ function parseTorrentRemote (torrentId, cb, options) {
     })
   } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
     // http, or https url to torrent file
-    options = Object.assign({
+    opts = Object.assign({
       url: torrentId,
       timeout: 30 * 1000,
       headers: { 'user-agent': 'WebTorrent (https://webtorrent.io)' }
-    }, options)
-    get.concat(options, (err, res, torrentBuf) => {
+    }, opts)
+    get.concat(opts, (err, res, torrentBuf) => {
       if (err) return cb(new Error(`Error downloading torrent: ${err.message}`))
       parseOrThrow(torrentBuf)
     })
