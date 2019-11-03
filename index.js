@@ -21,30 +21,46 @@ module.exports.toTorrentFile = encodeTorrentFile
  * @return {Object}
  */
 function parseTorrent (torrentId) {
+  // magnet uri (string)
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
-    // magnet uri (string)
     return magnet(torrentId)
-  } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
-    // info hash (hex/base-32 string)
+  }
+
+  // info hash (hex/base-32 string)
+  if (typeof torrentId === 'string' &&
+    (/^[a-f0-9]{40}$/i.test(torrentId) ||
+    /^[a-z2-7]{32}$/i.test(torrentId))
+  ) {
     return magnet(`magnet:?xt=urn:btih:${torrentId}`)
-  } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
-    // info hash (buffer)
+  }
+
+  // info hash (buffer)
+  if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
     return magnet(`magnet:?xt=urn:btih:${torrentId.toString('hex')}`)
-  } else if (Buffer.isBuffer(torrentId)) {
-    // .torrent file (buffer)
+  }
+
+  // .torrent file (buffer)
+  if (Buffer.isBuffer(torrentId)) {
     return decodeTorrentFile(torrentId) // might throw
-  } else if (torrentId && torrentId.infoHash) {
-    // parsed torrent (from `parse-torrent` or `magnet-uri`)
+  }
+
+  // parsed torrent (from `parse-torrent` or `magnet-uri`)
+  if (torrentId && torrentId.infoHash) {
     torrentId.infoHash = torrentId.infoHash.toLowerCase()
+
     if (!torrentId.announce) torrentId.announce = []
+
     if (typeof torrentId.announce === 'string') {
       torrentId.announce = [torrentId.announce]
     }
+
     if (!torrentId.urlList) torrentId.urlList = []
+
     return torrentId
-  } else {
-    throw new Error('Invalid torrent identifier')
   }
+
+  // else
+  throw new Error('Invalid torrent identifier')
 }
 
 function parseTorrentRemote (torrentId, cb) {
