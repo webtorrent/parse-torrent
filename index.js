@@ -23,7 +23,14 @@ module.exports.toTorrentFile = encodeTorrentFile
 function parseTorrent (torrentId) {
   // magnet uri (string)
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
-    return magnet(torrentId)
+    const torrentObj = magnet(torrentId)
+
+    // infoHash won't be defined if a non-bittorrent magnet is passed
+    if (!torrentObj.infoHash) {
+      throw new Error('Invalid torrent identifier')
+    }
+
+    return torrentObj
   }
 
   // info hash (hex/base-32 string)
