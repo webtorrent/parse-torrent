@@ -22,25 +22,36 @@ module.exports.toTorrentFile = encodeTorrentFile
  */
 function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
-    // magnet uri (string)
-    return magnet(torrentId)
+    // if magnet uri (string)
+    const torrentObj = magnet(torrentId)
+
+    // infoHash won't be defined if a non-bittorrent magnet is passed
+    if (!torrentObj.infoHash) {
+      throw new Error('Invalid torrent identifier')
+    }
+
+    return torrentObj
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
-    // info hash (hex/base-32 string)
+    // if info hash (hex/base-32 string)
     return magnet(`magnet:?xt=urn:btih:${torrentId}`)
   } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
-    // info hash (buffer)
+    // if info hash (buffer)
     return magnet(`magnet:?xt=urn:btih:${torrentId.toString('hex')}`)
   } else if (Buffer.isBuffer(torrentId)) {
-    // .torrent file (buffer)
+    // if .torrent file (buffer)
     return decodeTorrentFile(torrentId) // might throw
   } else if (torrentId && torrentId.infoHash) {
-    // parsed torrent (from `parse-torrent` or `magnet-uri`)
+    // if parsed torrent (from `parse-torrent` or `magnet-uri`)
     torrentId.infoHash = torrentId.infoHash.toLowerCase()
+
     if (!torrentId.announce) torrentId.announce = []
+
     if (typeof torrentId.announce === 'string') {
       torrentId.announce = [torrentId.announce]
     }
+
     if (!torrentId.urlList) torrentId.urlList = []
+
     return torrentId
   } else {
     throw new Error('Invalid torrent identifier')
