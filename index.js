@@ -7,7 +7,6 @@ const get = require('simple-get')
 const magnet = require('magnet-uri')
 const path = require('path')
 const sha1 = require('simple-sha1')
-const uniq = require('uniq')
 
 module.exports = parseTorrent
 module.exports.remote = parseTorrentRemote
@@ -173,8 +172,9 @@ function decodeTorrentFile (torrent) {
   }
   result.urlList = (torrent['url-list'] || []).map(url => url.toString())
 
-  uniq(result.announce)
-  uniq(result.urlList)
+  // remove duplicates by converting to Set and back
+  result.announce = Array.from(new Set(result.announce))
+  result.urlList = Array.from(new Set(result.urlList))
 
   const files = torrent.info.files || [torrent.info]
   result.files = files.map((file, i) => {
