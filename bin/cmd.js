@@ -7,6 +7,7 @@ function usage () {
   console.error('Usage: parse-torrent /path/to/torrent')
   console.error('       parse-torrent magnet_uri')
   console.error('       parse-torrent --stdin')
+  console.error('       parse-torrent --raw')
 }
 
 function error (err) {
@@ -30,9 +31,11 @@ function onTorrentId (torrentId) {
   parseTorrent.remote(torrentId, function (err, parsedTorrent) {
     if (err) return error(err)
 
-    delete parsedTorrent.info
-    delete parsedTorrent.infoBuffer
-    delete parsedTorrent.infoHashBuffer
+    if (arg !== '--raw') {
+      delete parsedTorrent.info
+      delete parsedTorrent.infoBuffer
+      delete parsedTorrent.infoHashBuffer
+    }
     console.log(JSON.stringify(parsedTorrent, undefined, 2))
   })
 }
