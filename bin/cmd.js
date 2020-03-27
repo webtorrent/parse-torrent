@@ -17,7 +17,7 @@ function error (err) {
 
 const arg = process.argv[2]
 
-if (!arg) {
+if (!arg || arg === '--help') {
   console.error('Missing required argument')
   usage()
   process.exit(1)
