@@ -7,7 +7,8 @@ function usage () {
   console.error('Usage: parse-torrent /path/to/torrent')
   console.error('       parse-torrent magnet_uri')
   console.error('       parse-torrent --stdin')
-  console.error('       parse-torrent --raw')
+  console.error('       parse-torrent --raw /path/to/torrent')
+  console.error('       parse-torrent --raw magnet_uri')
 }
 
 function error (err) {
@@ -15,27 +16,41 @@ function error (err) {
   process.exit(1)
 }
 
-const arg = process.argv[2]
+const args = process.argv.slice(2)
 
-if (!arg || arg === '--help') {
-  console.error('Missing required argument')
+if (!args[0] || args.includes('--help')) {
   usage()
   process.exit(1)
 }
 
-if (arg === '--stdin' || arg === '-') stdin.buffer().then(onTorrentId).catch(error)
-else if (arg === '--version' || arg === '-v') console.log(require('../package.json').version)
-else onTorrentId(arg)
+if (args.includes('--stdin') || args.includes('-')) stdin.buffer().then(onTorrentId).catch(error)
+else if (args.includes() === '--version' || args.includes('-v')) console.log(require('../package.json').version)
+else onTorrentId(args[args.length - 1])
 
 function onTorrentId (torrentId) {
   parseTorrent.remote(torrentId, function (err, parsedTorrent) {
     if (err) return error(err)
 
-    if (arg !== '--raw') {
+    if (args.includes('--raw')) {
+      recursiveStringify(parsedTorrent.info)
+    } else {
       delete parsedTorrent.info
-      delete parsedTorrent.infoBuffer
-      delete parsedTorrent.infoHashBuffer
     }
+
+    delete parsedTorrent.infoBuffer
+    delete parsedTorrent.infoHashBuffer
+
     console.log(JSON.stringify(parsedTorrent, undefined, 2))
   })
+}
+
+function recursiveStringify (obj) {
+  for (const key of Object.keys(obj)) {
+    if (!Buffer.isBuffer(obj[key]) &&
+        typeof obj[key] === 'object' && obj[key] !== null) {
+      recursiveStringify(obj[key])
+    } else {
+      obj[key] = obj[key].toString()
+    }
+  }
 }
