@@ -1,3 +1,4 @@
+/*! parse-torrent. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
 /* global Blob */
 
 const bencode = require('bencode')
