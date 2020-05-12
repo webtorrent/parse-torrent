@@ -262,4 +262,4 @@ function ensure (bool, fieldName) {
 
 // Workaround Browserify v13 bug
 // https://github.com/substack/node-browserify/issues/1483
-;((() => { Buffer.alloc(0) }))()
+;(() => { Buffer.alloc(0) })()
