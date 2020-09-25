@@ -47,10 +47,11 @@ function parseTorrent (torrentId) {
   }
 }
 
-function parseTorrentRemote (torrentId, cb, opts) {
-  let parsedTorrent
+function parseTorrentRemote (torrentId, opts, cb) {
+  if (typeof opts === 'function') return parseTorrentRemote(torrentId, {}, opts)
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
+  let parsedTorrent
   try {
     parsedTorrent = parseTorrent(torrentId)
   } catch (err) {
