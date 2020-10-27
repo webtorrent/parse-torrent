@@ -22,7 +22,7 @@
   "devDependencies": {
     "brfs": "^2.0.0",
     "standard": "*",
-    "tape": "^4.0.0",
+    "tape": "^5.0.0",
     "webtorrent-fixtures": "^1.0.0",
     "xtend": "^4.0.0"
   },
