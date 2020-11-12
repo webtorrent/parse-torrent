@@ -141,8 +141,8 @@ parseTorrent.remote(torrentId, (err, parsedTorrent) => {
 })
 ```
 
-If the `torrentId` is an http/https to the .torrent file, pass an object in the parameters
-to add `simple-get` params that will modify the request. For example:
+If the `torrentId` is an http/https link to the .torrent file, then the request to the file
+can be modified by passing `simple-get` params. For example:
 
 ```js
 parseTorrent.remote(torrentId, { timeout: 60 * 1000 }, (err, parsedTorrent) => {
