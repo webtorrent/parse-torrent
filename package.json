@@ -7,6 +7,9 @@
     "email": "feross@webtorrent.io",
     "url": "https://webtorrent.io"
   },
+  "browser": {
+    "fs": false
+  },
   "bin": "./bin/cmd.js",
   "bugs": {
     "url": "https://github.com/webtorrent/parse-torrent/issues"
