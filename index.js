@@ -8,6 +8,7 @@ const get = require('simple-get')
 const magnet = require('magnet-uri')
 const path = require('path')
 const sha1 = require('simple-sha1')
+const queueMicrotask = require('queue-microtask')
 
 module.exports = parseTorrent
 module.exports.remote = parseTorrentRemote
@@ -71,7 +72,7 @@ function parseTorrentRemote (torrentId, opts, cb) {
   }
 
   if (parsedTorrent && parsedTorrent.infoHash) {
-    process.nextTick(() => {
+    queueMicrotask(() => {
       cb(null, parsedTorrent)
     })
   } else if (isBlob(torrentId)) {
@@ -97,7 +98,7 @@ function parseTorrentRemote (torrentId, opts, cb) {
       parseOrThrow(torrentBuf)
     })
   } else {
-    process.nextTick(() => {
+    queueMicrotask(() => {
       cb(new Error('Invalid torrent identifier'))
     })
   }
