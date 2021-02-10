@@ -1,7 +1,7 @@
 {
   "name": "parse-torrent",
   "description": "Parse a torrent identifier (magnet uri, .torrent file, info hash)",
-  "version": "9.1.1",
+  "version": "9.1.2",
   "author": {
     "name": "WebTorrent LLC",
     "email": "feross@webtorrent.io",
