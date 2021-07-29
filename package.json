@@ -24,7 +24,9 @@
     "simple-sha1": "^3.0.1"
   },
   "devDependencies": {
+    "@webtorrent/semantic-release-config": "1.0.5",
     "brfs": "2.0.2",
+    "semantic-release": "17.4.4",
     "standard": "*",
     "tape": "5.2.2",
     "webtorrent-fixtures": "1.7.4",
@@ -65,9 +67,9 @@
   "renovate": {
     "extends": [
       "github>webtorrent/renovate-config"
-    ],
-    "lockFileMaintenance": {
-      "enabled": false
-    }
+    ]
+  },
+  "release": {
+    "extends": "@webtorrent/semantic-release-config"
   }
 }
