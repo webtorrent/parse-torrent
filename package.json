@@ -15,7 +15,7 @@
     "url": "https://github.com/webtorrent/parse-torrent/issues"
   },
   "dependencies": {
-    "bencode": "^2.0.1",
+    "bencode": "^2.0.2",
     "blob-to-buffer": "^1.2.9",
     "get-stdin": "^8.0.0",
     "magnet-uri": "^6.0.0",
