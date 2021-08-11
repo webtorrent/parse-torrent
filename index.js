@@ -20,7 +20,7 @@ module.exports.toTorrentFile = encodeTorrentFile
 /**
  * Parse a torrent identifier (magnet uri, .torrent file, info hash)
  * @param  {string|Buffer|Object} torrentId
- * @return {Object}
+ * @return {Object} parsed torrent object
  */
 function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
