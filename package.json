@@ -20,7 +20,7 @@
     "get-stdin": "^8.0.0",
     "magnet-uri": "^6.2.0",
     "queue-microtask": "^1.2.3",
-    "simple-get": "^4.0.0",
+    "simple-get": "^4.0.1",
     "simple-sha1": "^3.1.0"
   },
   "devDependencies": {
