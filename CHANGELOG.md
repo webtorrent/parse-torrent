@@ -1,3 +1,10 @@
+## [9.1.5](https://github.com/webtorrent/parse-torrent/compare/v9.1.4...v9.1.5) (2022-03-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency simple-get to ^4.0.1 ([7860eda](https://github.com/webtorrent/parse-torrent/commit/7860edad8bb5dd9ba2cc7135452aea173f70ccc1))
+
 ## [9.1.4](https://github.com/webtorrent/parse-torrent/compare/v9.1.3...v9.1.4) (2021-08-04)
 
 
