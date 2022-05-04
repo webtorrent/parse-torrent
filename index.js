@@ -8,6 +8,7 @@ const get = require('simple-get')
 const magnet = require('magnet-uri')
 const path = require('path')
 const sha1 = require('simple-sha1')
+const sha256 = require('simple-sha256')
 const queueMicrotask = require('queue-microtask')
 
 module.exports = parseTorrent
@@ -19,7 +20,7 @@ module.exports.toTorrentFile = encodeTorrentFile
 /**
  * Parse a torrent identifier (magnet uri, .torrent file, info hash)
  * @param  {string|Buffer|Object} torrentId
- * @return {Object}
+ * @return {Object} parsed torrent object
  */
 function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
@@ -27,23 +28,27 @@ function parseTorrent (torrentId) {
     const torrentObj = magnet(torrentId)
 
     // infoHash won't be defined if a non-bittorrent magnet is passed
-    if (!torrentObj.infoHash) {
+    if (!torrentObj.infoHash && !torrentObj.infoHashV2) {
       throw new Error('Invalid torrent identifier')
     }
 
     return torrentObj
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
-    // if info hash (hex/base-32 string)
+    // if v1 info hash (hex/base-32 string)
     return magnet(`magnet:?xt=urn:btih:${torrentId}`)
+  } else if (typeof torrentId === 'string' && /^1220(.{64})/.test(torrentId)) {
+    // if v2 info hash (base-32 string)
+    return magnet(`magnet:?xt=urn:btmh:${torrentId}`)
   } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
-    // if info hash (buffer)
+    // if v1 info hash (buffer)
     return magnet(`magnet:?xt=urn:btih:${torrentId.toString('hex')}`)
   } else if (Buffer.isBuffer(torrentId)) {
     // if .torrent file (buffer)
     return decodeTorrentFile(torrentId) // might throw
-  } else if (torrentId && torrentId.infoHash) {
+  } else if (torrentId && (torrentId.infoHash || torrentId.infoHashV2)) {
     // if parsed torrent (from `parse-torrent` or `magnet-uri`)
-    torrentId.infoHash = torrentId.infoHash.toLowerCase()
+    if (torrentId.infoHash) torrentId.infoHash = torrentId.infoHash.toLowerCase()
+    if (torrentId.infoHashV2) torrentId.infoHashV2 = torrentId.infoHashV2.toLowerCase()
 
     if (!torrentId.announce) torrentId.announce = []
 
@@ -71,7 +76,7 @@ function parseTorrentRemote (torrentId, opts, cb) {
     // filesystem path, so don't consider it an error yet.
   }
 
-  if (parsedTorrent && parsedTorrent.infoHash) {
+  if (parsedTorrent && (parsedTorrent.infoHash || parsedTorrent.infoHashV2)) {
     queueMicrotask(() => {
       cb(null, parsedTorrent)
     })
@@ -109,7 +114,7 @@ function parseTorrentRemote (torrentId, opts, cb) {
     } catch (err) {
       return cb(err)
     }
-    if (parsedTorrent && parsedTorrent.infoHash) cb(null, parsedTorrent)
+    if (parsedTorrent && (parsedTorrent.infoHash || parsedTorrent.infoHashV2)) cb(null, parsedTorrent)
     else cb(new Error('Invalid torrent identifier'))
   }
 }
@@ -148,6 +153,7 @@ function decodeTorrentFile (torrent) {
 
   result.infoHash = sha1.sync(result.infoBuffer)
   result.infoHashBuffer = Buffer.from(result.infoHash, 'hex')
+  result.infoHashV2 = sha256.sync(result.infoBuffer)
 
   if (torrent.info.private !== undefined) result.private = !!torrent.info.private
 
