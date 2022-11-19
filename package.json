@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "bencode": "^2.0.2",
-    "blob-to-buffer": "^1.2.9",
     "get-stdin": "^8.0.0",
     "magnet-uri": "^6.2.0",
     "queue-microtask": "^1.2.3",

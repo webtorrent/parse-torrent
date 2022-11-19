@@ -72,34 +72,34 @@ test('dht put/get of torrent (BEP46)', function (t) {
       )
 
       // should perform a dht.get
-      parseTorrent.remote({
-        torrentId: 'magnet:?xs=urn:btpk:' + keypair.publicKey.toString('hex'),
-        dht
-      }, function (err, parsedTorrent) {
-        t.ifError(err)
-        t.equal(infoHashBuf.toString('hex'), parsedTorrent.infoHash,
-          'got back what we put in'
-        )
-
-        // put a value without infohash (should throw)
-        opts.v = 'foo'
-        opts.seq++
-        dht.put(opts, function (_, hash) {
-          t.equal(
-            hash.toString('hex'),
-            expectedHash.toString('hex'),
-            'hash of the public key'
+      parseTorrent.remote(
+        'magnet:?xs=urn:btpk:' + keypair.publicKey.toString('hex'),
+        { dht },
+        function (err, parsedTorrent) {
+          t.ifError(err)
+          t.equal(infoHashBuf.toString('hex'), parsedTorrent.infoHash,
+            'got back what we put in'
           )
 
-          parseTorrent.remote({
-            torrentId: 'magnet:?xs=urn:btpk:' + keypair.publicKey.toString('hex'),
-            dht
-          }, function (err, parsedTorrent) {
-            if (err) t.pass(err)
-            else t.fail('should have errored')
+          // put a value without infohash (should throw)
+          opts.v = 'foo'
+          opts.seq++
+          dht.put(opts, function (_, hash) {
+            t.equal(
+              hash.toString('hex'),
+              expectedHash.toString('hex'),
+              'hash of the public key'
+            )
+
+            parseTorrent.remote(
+              'magnet:?xs=urn:btpk:' + keypair.publicKey.toString('hex'),
+              { dht },
+              function (err, parsedTorrent) {
+                if (err) t.pass(err)
+                else t.fail('should have errored')
+              })
           })
         })
-      })
     })
   })
 })

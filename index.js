@@ -1,8 +1,7 @@
 /*! parse-torrent. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
-/* global Blob */
+/* global Blob,Response */
 
 const bencode = require('bencode')
-const blobToBuffer = require('blob-to-buffer')
 const crypto = require('crypto')
 const fs = require('fs') // browser exclude
 const get = require('simple-get')
@@ -16,6 +15,25 @@ module.exports.remote = parseTorrentRemote
 
 module.exports.toMagnetURI = magnet.encode
 module.exports.toTorrentFile = encodeTorrentFile
+
+/**
+ * blobToBuffer converts a blob to a buffer.
+ * @param {Blob} blob
+ * @param {function(err, buffer)} cb
+ */
+function blobToBuffer (blob, cb) {
+  if (typeof Blob === 'undefined' || !(blob instanceof Blob)) {
+    throw new Error('first argument must be a Blob')
+  }
+  if (typeof cb !== 'function') {
+    throw new Error('second argument must be a function')
+  }
+
+  new Response(blob).arrayBuffer()
+    .catch((err) => cb(err, null))
+    .then(Buffer.from)
+    .then((buffer) => cb(null, buffer))
+}
 
 /**
  * Parse a torrent identifier (magnet uri, .torrent file, info hash)
