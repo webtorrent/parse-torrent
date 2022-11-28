@@ -1,9 +1,9 @@
 /* global Blob */
 
-const extend = require('xtend')
-const fixtures = require('webtorrent-fixtures')
-const parseTorrent = require('../')
-const test = require('tape')
+import extend from 'xtend'
+import fixtures from 'webtorrent-fixtures'
+import parseTorrent, { remote } from '../index.js'
+import test from 'tape'
 
 test('Test supported torrentInfo types', t => {
   let parsed
@@ -126,7 +126,7 @@ test('parse single file torrent from Blob', t => {
 
   t.plan(4)
   const leavesBlob = makeBlobShim(fixtures.leaves.torrent)
-  parseTorrent.remote(leavesBlob, (err, parsed) => {
+  remote(leavesBlob, (err, parsed) => {
     t.error(err)
     t.equal(parsed.infoHash, fixtures.leaves.parsedTorrent.infoHash)
     t.equal(parsed.name, fixtures.leaves.parsedTorrent.name)

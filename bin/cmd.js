@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const stdin = require('get-stdin')
-const parseTorrent = require('../')
+import stdin from 'get-stdin'
+import parseTorrent from '../index.js'
 
 function usage () {
   console.error('Usage: parse-torrent /path/to/torrent')

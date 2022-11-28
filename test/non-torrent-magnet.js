@@ -1,5 +1,5 @@
-const parseTorrent = require('../')
-const test = require('tape')
+import parseTorrent from '../index.js'
+import test from 'tape'
 
 test('exception thrown with non-bittorrent URNs', function (t) {
   // Non-bittorrent URNs (examples from Wikipedia)

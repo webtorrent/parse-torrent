@@ -27,8 +27,8 @@ The return value of `parseTorrent` will contain as much info as possible about t
 torrent. The only property that is guaranteed to be present is `infoHash`.
 
 ```js
-const parseTorrent = require('parse-torrent')
-const fs = require('fs')
+import parseTorrent from 'parse-torrent'
+import fs from 'fs'
 
 // info hash (as a hex string)
 parseTorrent('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36')
@@ -113,7 +113,7 @@ The reverse works too. To convert an object of keys/value to a magnet uri or .to
 buffer, use `toMagnetURI` and `toTorrentFile`.
 
 ```js
-const parseTorrent = require('parse-torrent')
+import parseTorrent from 'parse-torrent'
 
 const uri = parseTorrent.toMagnetURI({
   infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36'

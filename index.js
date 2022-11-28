@@ -1,20 +1,14 @@
 /*! parse-torrent. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
 /* global Blob */
 
-const bencode = require('bencode')
-const blobToBuffer = require('blob-to-buffer')
-const fs = require('fs') // browser exclude
-const get = require('simple-get')
-const magnet = require('magnet-uri')
-const path = require('path')
-const sha1 = require('simple-sha1')
-const queueMicrotask = require('queue-microtask')
-
-module.exports = parseTorrent
-module.exports.remote = parseTorrentRemote
-
-module.exports.toMagnetURI = magnet.encode
-module.exports.toTorrentFile = encodeTorrentFile
+import bencode from 'bencode'
+import blobToBuffer from 'blob-to-buffer'
+import fs from 'fs' // browser exclude
+import get from 'simple-get'
+import magnet from 'magnet-uri'
+import path from 'path'
+import sha1 from 'simple-sha1'
+import queueMicrotask from 'queue-microtask'
 
 /**
  * Parse a torrent identifier (magnet uri, .torrent file, info hash)
@@ -267,3 +261,7 @@ function ensure (bool, fieldName) {
 // Workaround Browserify v13 bug
 // https://github.com/substack/node-browserify/issues/1483
 ;(() => { Buffer.alloc(0) })()
+
+export default parseTorrent
+const toMagnetURI = magnet.encode
+export { parseTorrentRemote as remote, encodeTorrentFile as toTorrentFile, toMagnetURI }
