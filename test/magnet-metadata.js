@@ -1,6 +1,6 @@
-const fixtures = require('webtorrent-fixtures')
-const parseTorrent = require('../')
-const test = require('tape')
+import fixtures from 'webtorrent-fixtures'
+import parseTorrent from '../index.js'
+import test from 'tape'
 
 const leavesMagnetParsed = {
   infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
