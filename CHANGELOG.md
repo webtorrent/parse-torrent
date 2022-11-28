@@ -1,3 +1,15 @@
+# [10.0.0](https://github.com/webtorrent/parse-torrent/compare/v9.1.5...v10.0.0) (2022-11-28)
+
+
+### Features
+
+* esm ([#118](https://github.com/webtorrent/parse-torrent/issues/118)) ([51551a5](https://github.com/webtorrent/parse-torrent/commit/51551a5d7d464df7d8c81cc70c97648d5d2ddefb))
+
+
+### BREAKING CHANGES
+
+* ESM only
+
 ## [9.1.5](https://github.com/webtorrent/parse-torrent/compare/v9.1.4...v9.1.5) (2022-03-26)
 
 
