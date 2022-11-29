@@ -29,7 +29,7 @@
     "brfs": "2.0.2",
     "semantic-release": "19.0.5",
     "standard": "*",
-    "tape": "5.5.3",
+    "tape": "5.6.1",
     "webtorrent-fixtures": "1.7.5",
     "xtend": "4.0.2"
   },
