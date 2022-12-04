@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import stdin from 'get-stdin'
-import parseTorrent from '../index.js'
+import { remote } from '../index.js'
 
 function usage () {
   console.error('Usage: parse-torrent /path/to/torrent')
@@ -28,7 +28,7 @@ else if (args.includes() === '--version' || args.includes('-v')) console.log(req
 else onTorrentId(args[args.length - 1])
 
 function onTorrentId (torrentId) {
-  parseTorrent.remote(torrentId, function (err, parsedTorrent) {
+  remote(torrentId, function (err, parsedTorrent) {
     if (err) return error(err)
 
     if (args.includes('--raw')) {
