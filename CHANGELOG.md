@@ -1,3 +1,10 @@
+## [10.0.1](https://github.com/webtorrent/parse-torrent/compare/v10.0.0...v10.0.1) (2022-12-04)
+
+
+### Bug Fixes
+
+* cli ([#124](https://github.com/webtorrent/parse-torrent/issues/124)) ([b67d213](https://github.com/webtorrent/parse-torrent/commit/b67d213a66fbd526bc961488af8b2bf65d08a108))
+
 # [10.0.0](https://github.com/webtorrent/parse-torrent/compare/v9.1.5...v10.0.0) (2022-11-28)
 
 
