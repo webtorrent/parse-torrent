@@ -9,16 +9,16 @@ const __dirname = dirname(__filename)
 
 const leavesUrlList = fs.readFileSync(path.join(__dirname, 'torrents/leaves-url-list.torrent'))
 
-test('parse url-list for webseed support', t => {
-  const torrent = parseTorrent(leavesUrlList)
+test('parse url-list for webseed support', async t => {
+  const torrent = await parseTorrent(leavesUrlList)
   t.deepEqual(torrent.urlList, ['http://www2.hn.psu.edu/faculty/jmanis/whitman/leaves-of-grass6x9.pdf'])
   t.end()
 })
 
-test('parseTorrent.toTorrentFile url-list for webseed support', t => {
-  const parsedTorrent = parseTorrent(leavesUrlList)
+test('parseTorrent.toTorrentFile url-list for webseed support', async t => {
+  const parsedTorrent = await parseTorrent(leavesUrlList)
   const buf = toTorrentFile(parsedTorrent)
-  const doubleParsedTorrent = parseTorrent(buf)
+  const doubleParsedTorrent = await parseTorrent(buf)
   t.deepEqual(doubleParsedTorrent.urlList, ['http://www2.hn.psu.edu/faculty/jmanis/whitman/leaves-of-grass6x9.pdf'])
   t.end()
 })

@@ -4,7 +4,7 @@ import test from 'tape'
 
 const leavesMagnetParsed = {
   infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
-  infoHashBuffer: Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex'),
+  infoHashBuffer: new Uint8Array(Buffer.from('d2474e86c95b19b8bcfdb92bc12c9d44667cfa36', 'hex')),
   name: 'Leaves of Grass by Walt Whitman.epub',
   announce: [],
   urlList: [],
@@ -53,7 +53,7 @@ const leavesMagnetParsed = {
   infoBuffer: Buffer.from('ZDY6bGVuZ3RoaTM2MjAxN2U0Om5hbWUzNjpMZWF2ZXMgb2YgR3Jhc3MgYnkgV2FsdCBXaGl0bWFuLmVwdWIxMjpwaWVjZSBsZW5ndGhpMTYzODRlNjpwaWVjZXM0NjA6H5w/Wb7sB5cV7FMyS96FaeSgtOvsQjB9TOVVe105ZMXvVdNUz0puzHvxvK950R+l4L4GWTyPqvwMK6LPdtccWwFSayMAf56ZKb6vxRUeZREJMaG0TCG/Hmi5E4+QSV5pDbxV9XLkwpRMus8m5rOuinIp2IqvoF9h6q5qvz8Hy225Z3zGre1N05heRYYnVn+nY58GX3GxiVQwSspjZnKeC0dz13roDKqWpSSATf5Lm9PervmZyd1RAnRnUZ1eslYa4swBRn3l9kMKYLy6JHl2ku+odw0j3wqDDZHLNbNAeoi6oFkNyMmqahIPJ0Nn3Nhn6I6DOMVyoG48gBsp9RnfUys+dvZwz2ruUxB/PTk3hIP2nPgPpWix6sU7UGFZ6YjYvBaSLRJdd9gD1lLDyjBwwW7tkXKrUG0g5SLqPxq2dLP5I9dv6PRP8y43LDs3ZWTG+18NvlIWTwNin9EyJja6uywBS32uWC2kE2OWUmHmzhK0NwHwqMntFSCnDroARACiZ3ZfbT3Vx761vTx1898qVFYKYYARR/pOx89WjnA6ywTlYQpNVtzCQtAyk+lEbPXkV9jrPZWI/ZDGmN6bDa2SmAkGwCbYwUCPoI/k7GU=', 'base64')
 }
 
-test('parse "torrent" from magnet metadata protocol', t => {
-  t.deepEquals(parseTorrent(fixtures.leavesMetadata.torrent), leavesMagnetParsed)
+test('parse "torrent" from magnet metadata protocol', async t => {
+  t.deepEquals(await parseTorrent(fixtures.leavesMetadata.torrent), leavesMagnetParsed)
   t.end()
 })

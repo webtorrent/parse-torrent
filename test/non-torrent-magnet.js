@@ -1,7 +1,7 @@
 import parseTorrent from '../index.js'
 import test from 'tape'
 
-test('exception thrown with non-bittorrent URNs', function (t) {
+test('exception thrown with non-bittorrent URNs', async function (t) {
   // Non-bittorrent URNs (examples from Wikipedia)
   const magnets = [
     'magnet:?xt=urn:sha1:PDAQRAOQQRYS76MRZJ33LK4MMVZBDSCL',
@@ -13,9 +13,13 @@ test('exception thrown with non-bittorrent URNs', function (t) {
     'magnet:?xt=urn:md5:4e7bef74677be349ccffc6a178e38299'
   ]
 
-  magnets.forEach(function (magnet) {
-    t.throws(() => parseTorrent(magnet))
-  })
+  await Promise.all(magnets.map(async function (magnet) {
+    try {
+      await parseTorrent(magnet)
+    } catch (e) {
+      t.ok(e instanceof Error)
+    }
+  }))
 
   t.end()
 })

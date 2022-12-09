@@ -3,6 +3,8 @@ import http from 'http'
 import { remote } from '../../index.js'
 import test from 'tape'
 
+fixtures.leaves.parsedTorrent.infoHashBuffer = new Uint8Array(fixtures.leaves.parsedTorrent.infoHashBuffer)
+
 test('http url to a torrent file, string', t => {
   t.plan(3)
 
