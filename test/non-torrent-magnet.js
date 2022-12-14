@@ -16,6 +16,7 @@ test('exception thrown with non-bittorrent URNs', async function (t) {
   await Promise.all(magnets.map(async function (magnet) {
     try {
       await parseTorrent(magnet)
+      t.error({ message: 'Expected throw' })
     } catch (e) {
       t.ok(e instanceof Error)
     }
