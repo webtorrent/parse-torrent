@@ -135,7 +135,7 @@ filesystem paths), as well as Blobs use the `parseTorrent.remote` function. It t
 a callback since these torrent types require async operations:
 
 ```js
-import {remote} from 'parse-torrent'
+import { remote } from 'parse-torrent'
 remote(torrentId, (err, parsedTorrent) => {
   if (err) throw err
   console.log(parsedTorrent)
@@ -146,7 +146,7 @@ If the `torrentId` is an http/https link to the .torrent file, then the request 
 can be modified by passing `simple-get` params. For example:
 
 ```js
-import {remote} from 'parse-torrent'
+import { remote } from 'parse-torrent'
 remote(torrentId, { timeout: 60 * 1000 }, (err, parsedTorrent) => {
   if (err) throw err
   console.log(parsedTorrent)
