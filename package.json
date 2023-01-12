@@ -30,7 +30,7 @@
     "semantic-release": "20.0.2",
     "standard": "*",
     "tape": "5.6.1",
-    "webtorrent-fixtures": "1.7.5",
+    "webtorrent-fixtures": "2.0.0",
     "xtend": "4.0.2"
   },
   "keywords": [
