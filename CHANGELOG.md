@@ -1,3 +1,5 @@
+## [10.0.2](https://github.com/webtorrent/parse-torrent/compare/v10.0.1...v10.0.2) (2023-01-11)
+
 ## [10.0.1](https://github.com/webtorrent/parse-torrent/compare/v10.0.0...v10.0.1) (2022-12-04)
 
 
