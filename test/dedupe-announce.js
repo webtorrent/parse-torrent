@@ -13,7 +13,7 @@ const expectedAnnounce = [
   'http://tracker.example.com/announce'
 ]
 
-test('dedupe announce list', t => {
-  t.deepEqual(parseTorrent(leavesDuplicateTracker).announce, expectedAnnounce)
+test('dedupe announce list', async t => {
+  t.deepEqual((await parseTorrent(leavesDuplicateTracker)).announce, expectedAnnounce)
   t.end()
 })

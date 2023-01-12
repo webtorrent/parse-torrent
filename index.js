@@ -2,20 +2,19 @@
 /* global Blob */
 
 import bencode from 'bencode'
-import blobToBuffer from 'blob-to-buffer'
 import fs from 'fs' // browser exclude
 import get from 'simple-get'
 import magnet from 'magnet-uri'
 import path from 'path'
-import sha1 from 'simple-sha1'
+import { hash, arr2hex, text2arr, arr2text } from 'uint8-util'
 import queueMicrotask from 'queue-microtask'
 
 /**
  * Parse a torrent identifier (magnet uri, .torrent file, info hash)
- * @param  {string|Buffer|Object} torrentId
+ * @param  {string|ArrayBufferView|Object} torrentId
  * @return {Object}
  */
-function parseTorrent (torrentId) {
+async function parseTorrent (torrentId) {
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
     // if magnet uri (string)
     const torrentObj = magnet(torrentId)
@@ -29,12 +28,12 @@ function parseTorrent (torrentId) {
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
     // if info hash (hex/base-32 string)
     return magnet(`magnet:?xt=urn:btih:${torrentId}`)
-  } else if (Buffer.isBuffer(torrentId) && torrentId.length === 20) {
+  } else if (ArrayBuffer.isView(torrentId) && torrentId.length === 20) {
     // if info hash (buffer)
-    return magnet(`magnet:?xt=urn:btih:${torrentId.toString('hex')}`)
-  } else if (Buffer.isBuffer(torrentId)) {
+    return magnet(`magnet:?xt=urn:btih:${arr2hex(torrentId)}`)
+  } else if (ArrayBuffer.isView(torrentId)) {
     // if .torrent file (buffer)
-    return decodeTorrentFile(torrentId) // might throw
+    return await decodeTorrentFile(torrentId) // might throw
   } else if (torrentId && torrentId.infoHash) {
     // if parsed torrent (from `parse-torrent` or `magnet-uri`)
     torrentId.infoHash = torrentId.infoHash.toLowerCase()
@@ -53,13 +52,13 @@ function parseTorrent (torrentId) {
   }
 }
 
-function parseTorrentRemote (torrentId, opts, cb) {
+async function parseTorrentRemote (torrentId, opts, cb) {
   if (typeof opts === 'function') return parseTorrentRemote(torrentId, {}, opts)
   if (typeof cb !== 'function') throw new Error('second argument must be a Function')
 
   let parsedTorrent
   try {
-    parsedTorrent = parseTorrent(torrentId)
+    parsedTorrent = await parseTorrent(torrentId)
   } catch (err) {
     // If torrent fails to parse, it could be a Blob, http/https URL or
     // filesystem path, so don't consider it an error yet.
@@ -70,10 +69,12 @@ function parseTorrentRemote (torrentId, opts, cb) {
       cb(null, parsedTorrent)
     })
   } else if (isBlob(torrentId)) {
-    blobToBuffer(torrentId, (err, torrentBuf) => {
-      if (err) return cb(new Error(`Error converting Blob: ${err.message}`))
+    try {
+      const torrentBuf = new Uint8Array(await torrentId.arrayBuffer())
       parseOrThrow(torrentBuf)
-    })
+    } catch (err) {
+      return cb(new Error(`Error converting Blob: ${err.message}`))
+    }
   } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
     // http, or https url to torrent file
     opts = Object.assign({
@@ -97,9 +98,9 @@ function parseTorrentRemote (torrentId, opts, cb) {
     })
   }
 
-  function parseOrThrow (torrentBuf) {
+  async function parseOrThrow (torrentBuf) {
     try {
-      parsedTorrent = parseTorrent(torrentBuf)
+      parsedTorrent = await parseTorrent(torrentBuf)
     } catch (err) {
       return cb(err)
     }
@@ -110,11 +111,11 @@ function parseTorrentRemote (torrentId, opts, cb) {
 
 /**
  * Parse a torrent. Throws an exception if the torrent is missing required fields.
- * @param  {Buffer|Object} torrent
+ * @param  {ArrayBufferView|Object} torrent
  * @return {Object}        parsed torrent
  */
-function decodeTorrentFile (torrent) {
-  if (Buffer.isBuffer(torrent)) {
+async function decodeTorrentFile (torrent) {
+  if (ArrayBuffer.isView(torrent)) {
     torrent = bencode.decode(torrent)
   }
 
@@ -136,39 +137,39 @@ function decodeTorrentFile (torrent) {
   const result = {
     info: torrent.info,
     infoBuffer: bencode.encode(torrent.info),
-    name: (torrent.info['name.utf-8'] || torrent.info.name).toString(),
+    name: arr2text(torrent.info['name.utf-8'] || torrent.info.name),
     announce: []
   }
 
-  result.infoHash = sha1.sync(result.infoBuffer)
-  result.infoHashBuffer = Buffer.from(result.infoHash, 'hex')
+  result.infoHashBuffer = await hash(result.infoBuffer)
+  result.infoHash = arr2hex(result.infoHashBuffer)
 
   if (torrent.info.private !== undefined) result.private = !!torrent.info.private
 
   if (torrent['creation date']) result.created = new Date(torrent['creation date'] * 1000)
-  if (torrent['created by']) result.createdBy = torrent['created by'].toString()
+  if (torrent['created by']) result.createdBy = arr2text(torrent['created by'])
 
-  if (Buffer.isBuffer(torrent.comment)) result.comment = torrent.comment.toString()
+  if (ArrayBuffer.isView(torrent.comment)) result.comment = arr2text(torrent.comment)
 
   // announce and announce-list will be missing if metadata fetched via ut_metadata
   if (Array.isArray(torrent['announce-list']) && torrent['announce-list'].length > 0) {
     torrent['announce-list'].forEach(urls => {
       urls.forEach(url => {
-        result.announce.push(url.toString())
+        result.announce.push(arr2text(url))
       })
     })
   } else if (torrent.announce) {
-    result.announce.push(torrent.announce.toString())
+    result.announce.push(arr2text(torrent.announce))
   }
 
   // handle url-list (BEP19 / web seeding)
-  if (Buffer.isBuffer(torrent['url-list'])) {
+  if (ArrayBuffer.isView(torrent['url-list'])) {
     // some clients set url-list to empty string
     torrent['url-list'] = torrent['url-list'].length > 0
       ? [torrent['url-list']]
       : []
   }
-  result.urlList = (torrent['url-list'] || []).map(url => url.toString())
+  result.urlList = (torrent['url-list'] || []).map(url => arr2text(url))
 
   // remove duplicates by converting to Set and back
   result.announce = Array.from(new Set(result.announce))
@@ -176,7 +177,7 @@ function decodeTorrentFile (torrent) {
 
   const files = torrent.info.files || [torrent.info]
   result.files = files.map((file, i) => {
-    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => p.toString())
+    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => arr2text(p))
     return {
       path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
       name: parts[parts.length - 1],
@@ -199,7 +200,7 @@ function decodeTorrentFile (torrent) {
 /**
  * Convert a parsed torrent object back into a .torrent file buffer.
  * @param  {Object} parsed parsed torrent
- * @return {Buffer}
+ * @return {Uint8Array}
  */
 function encodeTorrentFile (parsed) {
   const torrent = {
@@ -208,7 +209,7 @@ function encodeTorrentFile (parsed) {
 
   torrent['announce-list'] = (parsed.announce || []).map(url => {
     if (!torrent.announce) torrent.announce = url
-    url = Buffer.from(url, 'utf8')
+    url = text2arr(url)
     return [url]
   })
 
@@ -249,7 +250,7 @@ function sumLength (sum, file) {
 function splitPieces (buf) {
   const pieces = []
   for (let i = 0; i < buf.length; i += 20) {
-    pieces.push(buf.slice(i, i + 20).toString('hex'))
+    pieces.push(arr2hex(buf.slice(i, i + 20)))
   }
   return pieces
 }
