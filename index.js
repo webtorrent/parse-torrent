@@ -3,7 +3,7 @@
 
 import bencode from 'bencode'
 import fs from 'fs' // browser exclude
-import get from 'simple-get'
+import fetch from 'cross-fetch-ponyfill'
 import magnet from 'magnet-uri'
 import path from 'path'
 import { hash, arr2hex, text2arr, arr2text } from 'uint8-util'
@@ -75,17 +75,18 @@ async function parseTorrentRemote (torrentId, opts, cb) {
     } catch (err) {
       return cb(new Error(`Error converting Blob: ${err.message}`))
     }
-  } else if (typeof get === 'function' && /^https?:/.test(torrentId)) {
-    // http, or https url to torrent file
-    opts = Object.assign({
-      url: torrentId,
-      timeout: 30 * 1000,
-      headers: { 'user-agent': 'WebTorrent (https://webtorrent.io)' }
-    }, opts)
-    get.concat(opts, (err, res, torrentBuf) => {
-      if (err) return cb(new Error(`Error downloading torrent: ${err.message}`))
+  } else if (/^https?:/.test(torrentId)) {
+    try {
+      const res = await fetch(torrentId, {
+        headers: { 'user-agent': 'WebTorrent (https://webtorrent.io)' },
+        signal: AbortSignal.timeout(30 * 1000),
+        ...opts
+      })
+      const torrentBuf = new Uint8Array(await res.arrayBuffer())
       parseOrThrow(torrentBuf)
-    })
+    } catch (err) {
+      return cb(new Error(`Error downloading torrent: ${err.message}`))
+    }
   } else if (typeof fs.readFile === 'function' && typeof torrentId === 'string') {
     // assume it's a filesystem path
     fs.readFile(torrentId, (err, torrentBuf) => {
