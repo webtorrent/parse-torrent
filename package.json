@@ -26,7 +26,7 @@
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.8",
     "brfs": "2.0.2",
-    "semantic-release": "20.0.2",
+    "semantic-release": "20.0.3",
     "standard": "*",
     "tape": "5.6.3",
     "webtorrent-fixtures": "2.0.0",
