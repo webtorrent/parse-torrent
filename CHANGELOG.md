@@ -1,3 +1,21 @@
+# [11.0.0](https://github.com/webtorrent/parse-torrent/compare/v10.0.2...v11.0.0) (2023-01-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bencode to v3 ([#122](https://github.com/webtorrent/parse-torrent/issues/122)) ([2bfae53](https://github.com/webtorrent/parse-torrent/commit/2bfae532e57f83c3babd80d0564f48af8d28292f))
+* **deps:** update dependency get-stdin to v9 ([#93](https://github.com/webtorrent/parse-torrent/issues/93)) ([e36a99e](https://github.com/webtorrent/parse-torrent/commit/e36a99e3d4176a37956f41c873c701f4fd0cc570))
+* **deps:** update dependency uint8-util to ^2.1.4 ([#129](https://github.com/webtorrent/parse-torrent/issues/129)) ([35ede29](https://github.com/webtorrent/parse-torrent/commit/35ede29dc83651fd59d8d752106938d19874e295))
+* drop rusha ([#117](https://github.com/webtorrent/parse-torrent/issues/117)) ([0d3be61](https://github.com/webtorrent/parse-torrent/commit/0d3be61f453d79ab5ba7751bd30e460ccea2f69b))
+* release config ([#134](https://github.com/webtorrent/parse-torrent/issues/134)) ([ec9bf75](https://github.com/webtorrent/parse-torrent/commit/ec9bf750b4a44bd20d5fcb1fec3218c54fa57f7c))
+
+
+### BREAKING CHANGES
+
+* perf: drop rusha, buffer
+
+* fix: error throw tests
+
 ## [10.0.2](https://github.com/webtorrent/parse-torrent/compare/v10.0.1...v10.0.2) (2023-01-11)
 
 ## [10.0.1](https://github.com/webtorrent/parse-torrent/compare/v10.0.0...v10.0.1) (2022-12-04)

@@ -1,7 +1,7 @@
 {
   "name": "parse-torrent",
   "description": "Parse a torrent identifier (magnet uri, .torrent file, info hash)",
-  "version": "10.0.2",
+  "version": "11.0.0",
   "author": {
     "name": "WebTorrent LLC",
     "email": "feross@webtorrent.io",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.8",
     "brfs": "2.0.2",
-    "semantic-release": "20.0.3",
+    "semantic-release": "20.0.4",
     "standard": "*",
     "tape": "5.6.3",
     "webtorrent-fixtures": "2.0.0",
