@@ -1,3 +1,10 @@
+## [11.0.1](https://github.com/webtorrent/parse-torrent/compare/v11.0.0...v11.0.1) (2023-01-25)
+
+
+### Performance Improvements
+
+* drop simple-get ([#131](https://github.com/webtorrent/parse-torrent/issues/131)) ([0176518](https://github.com/webtorrent/parse-torrent/commit/01765183c3a032d503c5258467f0ff09587df9fc))
+
 # [11.0.0](https://github.com/webtorrent/parse-torrent/compare/v10.0.2...v11.0.0) (2023-01-25)
 
 
