@@ -21,7 +21,7 @@
     "get-stdin": "^9.0.0",
     "magnet-uri": "^6.2.0",
     "queue-microtask": "^1.2.3",
-    "uint8-util": "^2.1.4"
+    "uint8-util": "^2.1.5"
   },
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.8",
