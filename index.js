@@ -1,5 +1,4 @@
 /*! parse-torrent. MIT License. WebTorrent LLC <https://webtorrent.io/opensource> */
-/* global Blob */
 
 import bencode from 'bencode'
 import fs from 'fs' // browser exclude
