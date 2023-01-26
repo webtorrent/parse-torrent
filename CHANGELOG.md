@@ -1,3 +1,10 @@
+## [11.0.3](https://github.com/webtorrent/parse-torrent/compare/v11.0.2...v11.0.3) (2023-01-26)
+
+
+### Bug Fixes
+
+* move global to package.json ([#138](https://github.com/webtorrent/parse-torrent/issues/138)) ([1112d2a](https://github.com/webtorrent/parse-torrent/commit/1112d2a8423972f727dac91e0dfe7806c8ac8a1c))
+
 ## [11.0.2](https://github.com/webtorrent/parse-torrent/compare/v11.0.1...v11.0.2) (2023-01-26)
 
 

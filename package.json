@@ -1,7 +1,7 @@
 {
   "name": "parse-torrent",
   "description": "Parse a torrent identifier (magnet uri, .torrent file, info hash)",
-  "version": "11.0.2",
+  "version": "11.0.3",
   "author": {
     "name": "WebTorrent LLC",
     "email": "feross@webtorrent.io",
@@ -14,8 +14,10 @@
   "bugs": {
     "url": "https://github.com/webtorrent/parse-torrent/issues"
   },
-  "standard":{
-    "globals": ["Blob"]
+  "standard": {
+    "globals": [
+      "Blob"
+    ]
   },
   "type": "module",
   "dependencies": {
