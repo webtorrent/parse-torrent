@@ -3,7 +3,7 @@
 import bencode from 'bencode'
 import fs from 'fs' // browser exclude
 import fetch from 'cross-fetch-ponyfill'
-import magnet from 'magnet-uri'
+import magnet, { encode } from 'magnet-uri'
 import path from 'path'
 import { hash, arr2hex, text2arr, arr2text } from 'uint8-util'
 import queueMicrotask from 'queue-microtask'
@@ -264,5 +264,5 @@ function ensure (bool, fieldName) {
 ;(() => { Buffer.alloc(0) })()
 
 export default parseTorrent
-const toMagnetURI = magnet.encode
+const toMagnetURI = encode
 export { parseTorrentRemote as remote, encodeTorrentFile as toTorrentFile, toMagnetURI }
