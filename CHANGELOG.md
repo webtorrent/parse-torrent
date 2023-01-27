@@ -1,3 +1,10 @@
+## [11.0.4](https://github.com/webtorrent/parse-torrent/compare/v11.0.3...v11.0.4) (2023-01-27)
+
+
+### Bug Fixes
+
+* ESM imports ([#139](https://github.com/webtorrent/parse-torrent/issues/139)) ([fc29cd8](https://github.com/webtorrent/parse-torrent/commit/fc29cd8099f051753c503d90e3abc7ceed91150a))
+
 ## [11.0.3](https://github.com/webtorrent/parse-torrent/compare/v11.0.2...v11.0.3) (2023-01-26)
 
 
