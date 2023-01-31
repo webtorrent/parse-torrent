@@ -1,3 +1,11 @@
+## [11.0.7](https://github.com/webtorrent/parse-torrent/compare/v11.0.6...v11.0.7) (2023-01-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency cross-fetch-ponyfill to ^1.0.3 ([#144](https://github.com/webtorrent/parse-torrent/issues/144)) ([6df9d6e](https://github.com/webtorrent/parse-torrent/commit/6df9d6ec56fc3e82c87aa3690ee5fccc8d79c3d8))
+* **deps:** update webtorrent ([#142](https://github.com/webtorrent/parse-torrent/issues/142)) ([6f865fe](https://github.com/webtorrent/parse-torrent/commit/6f865fe41386c9870fdaad57880d4bb82b4bc779)), closes [#145](https://github.com/webtorrent/parse-torrent/issues/145)
+
 ## [11.0.6](https://github.com/webtorrent/parse-torrent/compare/v11.0.5...v11.0.6) (2023-01-31)
 
 
