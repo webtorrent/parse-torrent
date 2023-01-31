@@ -22,7 +22,7 @@
   "type": "module",
   "dependencies": {
     "bencode": "^3.0.3",
-    "cross-fetch-ponyfill": "^1.0.1",
+    "cross-fetch-ponyfill": "^1.0.3",
     "get-stdin": "^9.0.0",
     "magnet-uri": "^7.0.2",
     "queue-microtask": "^1.2.3",
