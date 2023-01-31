@@ -177,7 +177,7 @@ async function decodeTorrentFile (torrent) {
 
   const files = torrent.info.files || [torrent.info]
   result.files = files.map((file, i) => {
-    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => arr2text(p))
+    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
     return {
       path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
       name: parts[parts.length - 1],
