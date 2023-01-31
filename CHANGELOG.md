@@ -1,3 +1,10 @@
+## [11.0.5](https://github.com/webtorrent/parse-torrent/compare/v11.0.4...v11.0.5) (2023-01-31)
+
+
+### Bug Fixes
+
+* fs polyfill ([#140](https://github.com/webtorrent/parse-torrent/issues/140)) ([a39ed02](https://github.com/webtorrent/parse-torrent/commit/a39ed029c087a40be44c0de2b92e8dcca07cadf7))
+
 ## [11.0.4](https://github.com/webtorrent/parse-torrent/compare/v11.0.3...v11.0.4) (2023-01-27)
 
 
