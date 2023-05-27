@@ -1,3 +1,10 @@
+## [11.0.10](https://github.com/webtorrent/parse-torrent/compare/v11.0.9...v11.0.10) (2023-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency magnet-uri to ^7.0.4 ([#154](https://github.com/webtorrent/parse-torrent/issues/154)) ([446a0ba](https://github.com/webtorrent/parse-torrent/commit/446a0ba598b20bef7d7fa4e4d475754144801f54))
+
 ## [11.0.9](https://github.com/webtorrent/parse-torrent/compare/v11.0.8...v11.0.9) (2023-05-27)
 
 
