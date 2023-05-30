@@ -1,3 +1,10 @@
+## [11.0.11](https://github.com/webtorrent/parse-torrent/compare/v11.0.10...v11.0.11) (2023-05-30)
+
+
+### Bug Fixes
+
+* remove unused hack ([#155](https://github.com/webtorrent/parse-torrent/issues/155)) ([ea0cc5e](https://github.com/webtorrent/parse-torrent/commit/ea0cc5eb589375d97698426b11963acacc5345b8))
+
 ## [11.0.10](https://github.com/webtorrent/parse-torrent/compare/v11.0.9...v11.0.10) (2023-05-27)
 
 
