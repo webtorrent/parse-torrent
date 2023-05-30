@@ -259,10 +259,6 @@ function ensure (bool, fieldName) {
   if (!bool) throw new Error(`Torrent is missing required field: ${fieldName}`)
 }
 
-// Workaround Browserify v13 bug
-// https://github.com/substack/node-browserify/issues/1483
-;(() => { Buffer.alloc(0) })()
-
 export default parseTorrent
 const toMagnetURI = encode
 export { parseTorrentRemote as remote, encodeTorrentFile as toTorrentFile, toMagnetURI }
