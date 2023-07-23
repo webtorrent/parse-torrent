@@ -113,14 +113,14 @@ The reverse works too. To convert an object of keys/value to a magnet uri or .to
 buffer, use `toMagnetURI` and `toTorrentFile`.
 
 ```js
-import parseTorrent from 'parse-torrent'
+import { toMagnetURI, toTorrentFile } from 'parse-torrent'
 
-const uri = parseTorrent.toMagnetURI({
+const uri = toMagnetURI({
   infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36'
 })
 console.log(uri) // 'magnet:?xt=urn:btih:d2474e86c95b19b8bcfdb92bc12c9d44667cfa36'
 
-const buf = parseTorrent.toTorrentFile({
+const buf = toTorrentFile({
   info: {
     /* ... */
   }
