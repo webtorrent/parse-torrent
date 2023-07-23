@@ -1,3 +1,53 @@
+## [11.0.12](https://github.com/webtorrent/parse-torrent/compare/v11.0.11...v11.0.12) (2023-05-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency magnet-uri to ^7.0.5 ([#156](https://github.com/webtorrent/parse-torrent/issues/156)) ([0784624](https://github.com/webtorrent/parse-torrent/commit/0784624754efeeeb6c2360822231bbd908572dfc))
+
+## [11.0.11](https://github.com/webtorrent/parse-torrent/compare/v11.0.10...v11.0.11) (2023-05-30)
+
+
+### Bug Fixes
+
+* remove unused hack ([#155](https://github.com/webtorrent/parse-torrent/issues/155)) ([ea0cc5e](https://github.com/webtorrent/parse-torrent/commit/ea0cc5eb589375d97698426b11963acacc5345b8))
+
+## [11.0.10](https://github.com/webtorrent/parse-torrent/compare/v11.0.9...v11.0.10) (2023-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency magnet-uri to ^7.0.4 ([#154](https://github.com/webtorrent/parse-torrent/issues/154)) ([446a0ba](https://github.com/webtorrent/parse-torrent/commit/446a0ba598b20bef7d7fa4e4d475754144801f54))
+
+## [11.0.9](https://github.com/webtorrent/parse-torrent/compare/v11.0.8...v11.0.9) (2023-05-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uint8-util to ^2.1.9 ([#146](https://github.com/webtorrent/parse-torrent/issues/146)) ([e0c1db2](https://github.com/webtorrent/parse-torrent/commit/e0c1db2f089e1bb02ee8d89fc8348fc5582506a7))
+
+## [11.0.8](https://github.com/webtorrent/parse-torrent/compare/v11.0.7...v11.0.8) (2023-04-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency magnet-uri to ^7.0.3 ([#150](https://github.com/webtorrent/parse-torrent/issues/150)) ([6406b7b](https://github.com/webtorrent/parse-torrent/commit/6406b7ba31631718aad0aa5a918045804ddf4cf7))
+
+## [11.0.7](https://github.com/webtorrent/parse-torrent/compare/v11.0.6...v11.0.7) (2023-01-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency cross-fetch-ponyfill to ^1.0.3 ([#144](https://github.com/webtorrent/parse-torrent/issues/144)) ([6df9d6e](https://github.com/webtorrent/parse-torrent/commit/6df9d6ec56fc3e82c87aa3690ee5fccc8d79c3d8))
+* **deps:** update webtorrent ([#142](https://github.com/webtorrent/parse-torrent/issues/142)) ([6f865fe](https://github.com/webtorrent/parse-torrent/commit/6f865fe41386c9870fdaad57880d4bb82b4bc779)), closes [#145](https://github.com/webtorrent/parse-torrent/issues/145)
+
+## [11.0.6](https://github.com/webtorrent/parse-torrent/compare/v11.0.5...v11.0.6) (2023-01-31)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uint8-util to ^2.1.7 ([#143](https://github.com/webtorrent/parse-torrent/issues/143)) ([bfa0190](https://github.com/webtorrent/parse-torrent/commit/bfa019012a5c294de2760564f10e4407eebf5bcc))
+
 ## [11.0.5](https://github.com/webtorrent/parse-torrent/compare/v11.0.4...v11.0.5) (2023-01-31)
 
 
