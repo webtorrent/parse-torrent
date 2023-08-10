@@ -1,3 +1,10 @@
+## [11.0.13](https://github.com/webtorrent/parse-torrent/compare/v11.0.12...v11.0.13) (2023-08-10)
+
+
+### Bug Fixes
+
+* **deps:** update dependency bencode to v4 ([#164](https://github.com/webtorrent/parse-torrent/issues/164)) ([89b0b2b](https://github.com/webtorrent/parse-torrent/commit/89b0b2b76414a6773b9ce0c31ce8cc004ed7e3b8))
+
 ## [11.0.12](https://github.com/webtorrent/parse-torrent/compare/v11.0.11...v11.0.12) (2023-05-31)
 
 
