@@ -1,3 +1,10 @@
+## [11.0.15](https://github.com/webtorrent/parse-torrent/compare/v11.0.14...v11.0.15) (2024-01-16)
+
+
+### Bug Fixes
+
+* build badges url ([#180](https://github.com/webtorrent/parse-torrent/issues/180)) ([15134f5](https://github.com/webtorrent/parse-torrent/commit/15134f5d753f96fdbc643ebb72d298f80be94d37))
+
 ## [11.0.14](https://github.com/webtorrent/parse-torrent/compare/v11.0.13...v11.0.14) (2023-08-11)
 
 
