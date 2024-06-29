@@ -1,3 +1,10 @@
+## [11.0.17](https://github.com/webtorrent/parse-torrent/compare/v11.0.16...v11.0.17) (2024-06-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uint8-util to ^2.2.5 ([#185](https://github.com/webtorrent/parse-torrent/issues/185)) ([c0c72ce](https://github.com/webtorrent/parse-torrent/commit/c0c72ceb2ca7484434cf4c25563191697febf12a))
+
 ## [11.0.16](https://github.com/webtorrent/parse-torrent/compare/v11.0.15...v11.0.16) (2024-01-16)
 
 
