@@ -24,7 +24,7 @@
     "bencode": "^4.0.0",
     "cross-fetch-ponyfill": "^1.0.3",
     "get-stdin": "^9.0.0",
-    "magnet-uri": "^7.0.5",
+    "magnet-uri": "^7.0.7",
     "queue-microtask": "^1.2.3",
     "uint8-util": "^2.2.5"
   },
