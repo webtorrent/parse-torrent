@@ -8,7 +8,8 @@
     "url": "https://webtorrent.io"
   },
   "browser": {
-    "fs": false
+    "fs": false,
+    "path": "path-esm"
   },
   "bin": "./bin/cmd.js",
   "bugs": {
@@ -26,7 +27,8 @@
     "get-stdin": "^9.0.0",
     "magnet-uri": "^7.0.7",
     "queue-microtask": "^1.2.3",
-    "uint8-util": "^2.2.5"
+    "uint8-util": "^2.2.5",
+    "path-esm": "^1.0.0"
   },
   "devDependencies": {
     "@webtorrent/semantic-release-config": "1.0.10",
