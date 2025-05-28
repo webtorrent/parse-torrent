@@ -18,24 +18,35 @@ async function parseTorrent (torrentId) {
     // if magnet uri (string)
     const torrentObj = magnet(torrentId)
 
-    // infoHash won't be defined if a non-bittorrent magnet is passed
-    if (!torrentObj.infoHash) {
+    // infoHash (v1) or infoHashV2 (v2) won't be defined if a non-bittorrent magnet is passed
+    if (!torrentObj.infoHash && !torrentObj.infoHashV2) {
       throw new Error('Invalid torrent identifier')
     }
 
     return torrentObj
   } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
-    // if info hash (hex/base-32 string)
+    // if info hash v1 (hex/base-32 string)
     return magnet(`magnet:?xt=urn:btih:${torrentId}`)
+  } else if (typeof torrentId === 'string' && /^[a-f0-9]{64}$/i.test(torrentId)) {
+    // if info hash v2 (hex string)
+    return magnet(`magnet:?xt=urn:btmh:1220${torrentId}`)
   } else if (ArrayBuffer.isView(torrentId) && torrentId.length === 20) {
-    // if info hash (buffer)
+    // if info hash v1 (buffer)
     return magnet(`magnet:?xt=urn:btih:${arr2hex(torrentId)}`)
+  } else if (ArrayBuffer.isView(torrentId) && torrentId.length === 32) {
+    // if info hash v2 (buffer)
+    return magnet(`magnet:?xt=urn:btmh:1220${arr2hex(torrentId)}`)
   } else if (ArrayBuffer.isView(torrentId)) {
     // if .torrent file (buffer)
     return await decodeTorrentFile(torrentId) // might throw
-  } else if (torrentId && torrentId.infoHash) {
+  } else if (torrentId && (torrentId.infoHash || torrentId.infoHashV2)) {
     // if parsed torrent (from `parse-torrent` or `magnet-uri`)
-    torrentId.infoHash = torrentId.infoHash.toLowerCase()
+    if (torrentId.infoHash) {
+      torrentId.infoHash = torrentId.infoHash.toLowerCase()
+    }
+    if (torrentId.infoHashV2) {
+      torrentId.infoHashV2 = torrentId.infoHashV2.toLowerCase()
+    }
 
     if (!torrentId.announce) torrentId.announce = []
 
@@ -63,7 +74,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
     // filesystem path, so don't consider it an error yet.
   }
 
-  if (parsedTorrent && parsedTorrent.infoHash) {
+  if (parsedTorrent && (parsedTorrent.infoHash || parsedTorrent.infoHashV2)) {
     queueMicrotask(() => {
       cb(null, parsedTorrent)
     })
@@ -104,7 +115,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
     } catch (err) {
       return cb(err)
     }
-    if (parsedTorrent && parsedTorrent.infoHash) cb(null, parsedTorrent)
+    if (parsedTorrent && (parsedTorrent.infoHash || parsedTorrent.infoHashV2)) cb(null, parsedTorrent)
     else cb(new Error('Invalid torrent identifier'))
   }
 }
@@ -122,16 +133,26 @@ async function decodeTorrentFile (torrent) {
   // sanity check
   ensure(torrent.info, 'info')
   ensure(torrent.info['name.utf-8'] || torrent.info.name, 'info.name')
-  ensure(torrent.info['piece length'], 'info[\'piece length\']')
-  ensure(torrent.info.pieces, 'info.pieces')
-
-  if (torrent.info.files) {
-    torrent.info.files.forEach(file => {
-      ensure(typeof file.length === 'number', 'info.files[0].length')
-      ensure(file['path.utf-8'] || file.path, 'info.files[0].path')
-    })
+  
+  const isV2 = torrent.info['meta version'] === 2
+  
+  if (isV2) {
+    // BitTorrent v2 validation
+    ensure(torrent.info['piece length'], 'info[\'piece length\']')
+    ensure(torrent.info['file tree'], 'info[\'file tree\']')
   } else {
-    ensure(typeof torrent.info.length === 'number', 'info.length')
+    // BitTorrent v1 validation
+    ensure(torrent.info['piece length'], 'info[\'piece length\']')
+    ensure(torrent.info.pieces, 'info.pieces')
+    
+    if (torrent.info.files) {
+      torrent.info.files.forEach(file => {
+        ensure(typeof file.length === 'number', 'info.files[0].length')
+        ensure(file['path.utf-8'] || file.path, 'info.files[0].path')
+      })
+    } else {
+      ensure(typeof torrent.info.length === 'number', 'info.length')
+    }
   }
 
   const result = {
@@ -141,8 +162,15 @@ async function decodeTorrentFile (torrent) {
     announce: []
   }
 
-  result.infoHashBuffer = await hash(result.infoBuffer)
+  // Generate SHA1 hash for v1 compatibility (always needed)
+  result.infoHashBuffer = await hash(result.infoBuffer, 'sha1')
   result.infoHash = arr2hex(result.infoHashBuffer)
+  
+  // For v2 torrents, also generate SHA256 hash
+  if (torrent.info['meta version'] === 2) {
+    result.infoHashV2Buffer = await hash(result.infoBuffer, 'sha256')
+    result.infoHashV2 = arr2hex(result.infoHashV2Buffer)
+  }
 
   if (torrent.info.private !== undefined) result.private = !!torrent.info.private
 
@@ -175,24 +203,66 @@ async function decodeTorrentFile (torrent) {
   result.announce = Array.from(new Set(result.announce))
   result.urlList = Array.from(new Set(result.urlList))
 
-  const files = torrent.info.files || [torrent.info]
-  result.files = files.map((file, i) => {
-    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
-    return {
-      path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
-      name: parts[parts.length - 1],
-      length: file.length,
-      offset: files.slice(0, i).reduce(sumLength, 0)
+  if (isV2) {
+    // Process v2 file tree
+    result.files = []
+    result.length = 0
+    
+    function processFileTree(tree, currentPath = []) {
+      for (const [name, entry] of Object.entries(tree)) {
+        const fullPath = [...currentPath, name]
+        
+        if (entry.length !== undefined) {
+          // This is a file
+          result.files.push({
+            path: path.join.apply(null, [path.sep].concat(fullPath)).slice(1),
+            name: name,
+            length: entry.length,
+            offset: result.length
+          })
+          result.length += entry.length
+        } else {
+          // This is a directory, recurse
+          processFileTree(entry, fullPath)
+        }
+      }
     }
-  })
-
-  result.length = files.reduce(sumLength, 0)
+    
+    processFileTree(torrent.info['file tree'])
+  } else {
+    // Process v1 files
+    const files = torrent.info.files || [torrent.info]
+    result.files = files.map((file, i) => {
+      const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
+      return {
+        path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
+        name: parts[parts.length - 1],
+        length: file.length,
+        offset: files.slice(0, i).reduce(sumLength, 0)
+      }
+    })
+    
+    result.length = files.reduce(sumLength, 0)
+  }
 
   const lastFile = result.files[result.files.length - 1]
 
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
-  result.pieces = splitPieces(torrent.info.pieces)
+  
+  if (isV2) {
+    // v2 torrents use piece layers instead of a single pieces string
+    result.pieces = []
+    if (torrent.info['piece layers']) {
+      // Convert piece layers to pieces array for compatibility
+      const pieceCount = Math.ceil(result.length / result.pieceLength)
+      for (let i = 0; i < pieceCount; i++) {
+        result.pieces.push('') // v2 pieces are computed differently
+      }
+    }
+  } else {
+    result.pieces = splitPieces(torrent.info.pieces)
+  }
 
   return result
 }
