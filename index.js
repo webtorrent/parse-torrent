@@ -133,9 +133,9 @@ async function decodeTorrentFile (torrent) {
   // sanity check
   ensure(torrent.info, 'info')
   ensure(torrent.info['name.utf-8'] || torrent.info.name, 'info.name')
-  
+
   const isV2 = torrent.info['meta version'] === 2
-  
+
   if (isV2) {
     // BitTorrent v2 validation
     ensure(torrent.info['piece length'], 'info[\'piece length\']')
@@ -144,7 +144,7 @@ async function decodeTorrentFile (torrent) {
     // BitTorrent v1 validation
     ensure(torrent.info['piece length'], 'info[\'piece length\']')
     ensure(torrent.info.pieces, 'info.pieces')
-    
+
     if (torrent.info.files) {
       torrent.info.files.forEach(file => {
         ensure(typeof file.length === 'number', 'info.files[0].length')
@@ -163,12 +163,12 @@ async function decodeTorrentFile (torrent) {
   }
 
   // Generate SHA1 hash for v1 compatibility (always needed)
-  result.infoHashBuffer = await hash(result.infoBuffer, 'sha1')
+  result.infoHashBuffer = await hash(result.infoBuffer)
   result.infoHash = arr2hex(result.infoHashBuffer)
-  
+
   // For v2 torrents, also generate SHA256 hash
   if (torrent.info['meta version'] === 2) {
-    result.infoHashV2Buffer = await hash(result.infoBuffer, 'sha256')
+    result.infoHashV2Buffer = await hash(result.infoBuffer, undefined, 'sha-256')
     result.infoHashV2 = arr2hex(result.infoHashV2Buffer)
   }
 
@@ -207,16 +207,16 @@ async function decodeTorrentFile (torrent) {
     // Process v2 file tree
     result.files = []
     result.length = 0
-    
-    function processFileTree(tree, currentPath = []) {
+
+    function processFileTree (tree, currentPath = []) {
       for (const [name, entry] of Object.entries(tree)) {
         const fullPath = [...currentPath, name]
-        
+
         if (entry.length !== undefined) {
           // This is a file
           result.files.push({
             path: path.join.apply(null, [path.sep].concat(fullPath)).slice(1),
-            name: name,
+            name,
             length: entry.length,
             offset: result.length
           })
@@ -227,7 +227,7 @@ async function decodeTorrentFile (torrent) {
         }
       }
     }
-    
+
     processFileTree(torrent.info['file tree'])
   } else {
     // Process v1 files
@@ -241,7 +241,7 @@ async function decodeTorrentFile (torrent) {
         offset: files.slice(0, i).reduce(sumLength, 0)
       }
     })
-    
+
     result.length = files.reduce(sumLength, 0)
   }
 
@@ -249,7 +249,7 @@ async function decodeTorrentFile (torrent) {
 
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
-  
+
   if (isV2) {
     // v2 torrents use piece layers instead of a single pieces string
     result.pieces = []
