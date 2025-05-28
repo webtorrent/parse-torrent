@@ -11,9 +11,11 @@ import queueMicrotask from 'queue-microtask'
 /**
  * Parse a torrent identifier (magnet uri, .torrent file, info hash)
  * @param  {string|ArrayBufferView|Object} torrentId
+ * @param  {Object} options
+ * @param  {string} options.hashMode - 'v1', 'v2', or 'both' (default: 'v1')
  * @return {Object}
  */
-async function parseTorrent (torrentId) {
+async function parseTorrent (torrentId, options = {}) {
   if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
     // if magnet uri (string)
     const torrentObj = magnet(torrentId)
@@ -38,7 +40,7 @@ async function parseTorrent (torrentId) {
     return magnet(`magnet:?xt=urn:btmh:1220${arr2hex(torrentId)}`)
   } else if (ArrayBuffer.isView(torrentId)) {
     // if .torrent file (buffer)
-    return await decodeTorrentFile(torrentId) // might throw
+    return await decodeTorrentFile(torrentId, options) // might throw
   } else if (torrentId && (torrentId.infoHash || torrentId.infoHashV2)) {
     // if parsed torrent (from `parse-torrent` or `magnet-uri`)
     if (torrentId.infoHash) {
@@ -68,7 +70,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
 
   let parsedTorrent
   try {
-    parsedTorrent = await parseTorrent(torrentId)
+    parsedTorrent = await parseTorrent(torrentId, opts)
   } catch (err) {
     // If torrent fails to parse, it could be a Blob, http/https URL or
     // filesystem path, so don't consider it an error yet.
@@ -111,7 +113,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
 
   async function parseOrThrow (torrentBuf) {
     try {
-      parsedTorrent = await parseTorrent(torrentBuf)
+      parsedTorrent = await parseTorrent(torrentBuf, opts)
     } catch (err) {
       return cb(err)
     }
@@ -123,9 +125,11 @@ async function parseTorrentRemote (torrentId, opts, cb) {
 /**
  * Parse a torrent. Throws an exception if the torrent is missing required fields.
  * @param  {ArrayBufferView|Object} torrent
+ * @param  {Object} options
+ * @param  {string} options.hashMode - 'v1', 'v2', or 'both' (default: 'v1')
  * @return {Object}        parsed torrent
  */
-async function decodeTorrentFile (torrent) {
+async function decodeTorrentFile (torrent, options = {}) {
   if (ArrayBuffer.isView(torrent)) {
     torrent = bencode.decode(torrent)
   }
@@ -133,16 +137,15 @@ async function decodeTorrentFile (torrent) {
   // sanity check
   ensure(torrent.info, 'info')
   ensure(torrent.info['name.utf-8'] || torrent.info.name, 'info.name')
+  ensure(torrent.info['piece length'], 'info[\'piece length\']')
 
   const isV2 = torrent.info['meta version'] === 2
 
   if (isV2) {
-    // BitTorrent v2 validation
-    ensure(torrent.info['piece length'], 'info[\'piece length\']')
+    // BitTorrent v2 specific validation
     ensure(torrent.info['file tree'], 'info[\'file tree\']')
   } else {
     // BitTorrent v1 validation
-    ensure(torrent.info['piece length'], 'info[\'piece length\']')
     ensure(torrent.info.pieces, 'info.pieces')
 
     if (torrent.info.files) {
@@ -162,12 +165,15 @@ async function decodeTorrentFile (torrent) {
     announce: []
   }
 
-  // Generate SHA1 hash for v1 compatibility (always needed)
-  result.infoHashBuffer = await hash(result.infoBuffer)
-  result.infoHash = arr2hex(result.infoHashBuffer)
+  // Generate hashes based on user preference
+  const { hashMode = 'v1' } = options
 
-  // For v2 torrents, also generate SHA256 hash
-  if (torrent.info['meta version'] === 2) {
+  if (hashMode === 'v1' || hashMode === 'both') {
+    result.infoHashBuffer = await hash(result.infoBuffer)
+    result.infoHash = arr2hex(result.infoHashBuffer)
+  }
+
+  if (hashMode === 'v2' || hashMode === 'both') {
     result.infoHashV2Buffer = await hash(result.infoBuffer, undefined, 'sha-256')
     result.infoHashV2 = arr2hex(result.infoHashV2Buffer)
   }
@@ -203,65 +209,52 @@ async function decodeTorrentFile (torrent) {
   result.announce = Array.from(new Set(result.announce))
   result.urlList = Array.from(new Set(result.urlList))
 
-  if (isV2) {
-    // Process v2 file tree
-    result.files = []
-    result.length = 0
-
+  // Process files (simplified to use same logic for v1 and v2)
+  if (isV2 && torrent.info['file tree']) {
+    // Convert v2 file tree to v1-style files array for consistent processing
+    const files = []
     function processFileTree (tree, currentPath = []) {
       for (const [name, entry] of Object.entries(tree)) {
         const fullPath = [...currentPath, name]
-
         if (entry.length !== undefined) {
-          // This is a file
-          result.files.push({
-            path: path.join.apply(null, [path.sep].concat(fullPath)).slice(1),
-            name,
-            length: entry.length,
-            offset: result.length
+          files.push({
+            'path.utf-8': fullPath,
+            length: entry.length
           })
-          result.length += entry.length
         } else {
-          // This is a directory, recurse
           processFileTree(entry, fullPath)
         }
       }
     }
-
     processFileTree(torrent.info['file tree'])
-  } else {
-    // Process v1 files
-    const files = torrent.info.files || [torrent.info]
-    result.files = files.map((file, i) => {
-      const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
-      return {
-        path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
-        name: parts[parts.length - 1],
-        length: file.length,
-        offset: files.slice(0, i).reduce(sumLength, 0)
-      }
-    })
-
-    result.length = files.reduce(sumLength, 0)
+    torrent.info.files = files
   }
+
+  // Use unified file processing logic
+  const files = torrent.info.files || [torrent.info]
+  result.files = files.map((file, i) => {
+    const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
+    return {
+      path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
+      name: parts[parts.length - 1],
+      length: file.length,
+      offset: files.slice(0, i).reduce(sumLength, 0)
+    }
+  })
+
+  result.length = files.reduce(sumLength, 0)
 
   const lastFile = result.files[result.files.length - 1]
 
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
 
-  if (isV2) {
-    // v2 torrents use piece layers instead of a single pieces string
-    result.pieces = []
-    if (torrent.info['piece layers']) {
-      // Convert piece layers to pieces array for compatibility
-      const pieceCount = Math.ceil(result.length / result.pieceLength)
-      for (let i = 0; i < pieceCount; i++) {
-        result.pieces.push('') // v2 pieces are computed differently
-      }
-    }
-  } else {
+  // Simplified pieces handling - fall back to v1 logic for both
+  if (torrent.info.pieces) {
     result.pieces = splitPieces(torrent.info.pieces)
+  } else {
+    // For v2 torrents without pieces, create empty array
+    result.pieces = []
   }
 
   return result
