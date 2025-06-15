@@ -14,28 +14,43 @@ import queueMicrotask from 'queue-microtask'
  * @return {Object}
  */
 async function parseTorrent (torrentId) {
-  if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
-    // if magnet uri (string)
-    const torrentObj = magnet(torrentId)
+  if (typeof torrentId === 'string') {
+    if (/^(stream-)?magnet:/.test(torrentId)) {
+      // if magnet uri (string)
+      const torrentObj = magnet(torrentId)
 
-    // infoHash won't be defined if a non-bittorrent magnet is passed
-    if (!torrentObj.infoHash) {
-      throw new Error('Invalid torrent identifier')
+      // infoHash (v1) or infoHashV2 (v2) won't be defined if a non-bittorrent magnet is passed
+      if (!torrentObj.infoHash && !torrentObj.infoHashV2) {
+        throw new Error('Invalid torrent identifier')
+      }
+
+      return torrentObj
+    } else if (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId)) {
+      // if info hash v1 (hex/base-32 string)
+      return magnet(`magnet:?xt=urn:btih:${torrentId}`)
+    } else if (/^[a-f0-9]{64}$/i.test(torrentId)) {
+      // if info hash v2 (hex string)
+      return magnet(`magnet:?xt=urn:btmh:1220${torrentId}`)
     }
-
-    return torrentObj
-  } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
-    // if info hash (hex/base-32 string)
-    return magnet(`magnet:?xt=urn:btih:${torrentId}`)
-  } else if (ArrayBuffer.isView(torrentId) && torrentId.length === 20) {
-    // if info hash (buffer)
-    return magnet(`magnet:?xt=urn:btih:${arr2hex(torrentId)}`)
   } else if (ArrayBuffer.isView(torrentId)) {
-    // if .torrent file (buffer)
-    return await decodeTorrentFile(torrentId) // might throw
-  } else if (torrentId && torrentId.infoHash) {
+    if (torrentId.length === 20) {
+      // if info hash v1 (buffer)
+      return magnet(`magnet:?xt=urn:btih:${arr2hex(torrentId)}`)
+    } else if (torrentId.length === 32) {
+      // if info hash v2 (buffer)
+      return magnet(`magnet:?xt=urn:btmh:1220${arr2hex(torrentId)}`)
+    } else {
+      // if .torrent file (buffer)
+      return await decodeTorrentFile(torrentId) // might throw
+    }
+  } else if (torrentId && (torrentId.infoHash || torrentId.infoHashV2)) {
     // if parsed torrent (from `parse-torrent` or `magnet-uri`)
-    torrentId.infoHash = torrentId.infoHash.toLowerCase()
+    if (torrentId.infoHash) {
+      torrentId.infoHash = torrentId.infoHash.toLowerCase()
+    }
+    if (torrentId.infoHashV2) {
+      torrentId.infoHashV2 = torrentId.infoHashV2.toLowerCase()
+    }
 
     if (!torrentId.announce) torrentId.announce = []
 
@@ -63,7 +78,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
     // filesystem path, so don't consider it an error yet.
   }
 
-  if (parsedTorrent && parsedTorrent.infoHash) {
+  if (parsedTorrent && (parsedTorrent.infoHash || parsedTorrent.infoHashV2)) {
     queueMicrotask(() => {
       cb(null, parsedTorrent)
     })
@@ -104,7 +119,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
     } catch (err) {
       return cb(err)
     }
-    if (parsedTorrent && parsedTorrent.infoHash) cb(null, parsedTorrent)
+    if (parsedTorrent && (parsedTorrent.infoHash || parsedTorrent.infoHashV2)) cb(null, parsedTorrent)
     else cb(new Error('Invalid torrent identifier'))
   }
 }
@@ -123,15 +138,29 @@ async function decodeTorrentFile (torrent) {
   ensure(torrent.info, 'info')
   ensure(torrent.info['name.utf-8'] || torrent.info.name, 'info.name')
   ensure(torrent.info['piece length'], 'info[\'piece length\']')
-  ensure(torrent.info.pieces, 'info.pieces')
 
-  if (torrent.info.files) {
-    torrent.info.files.forEach(file => {
-      ensure(typeof file.length === 'number', 'info.files[0].length')
-      ensure(file['path.utf-8'] || file.path, 'info.files[0].path')
-    })
-  } else {
-    ensure(typeof torrent.info.length === 'number', 'info.length')
+  const isV2 = torrent.info['meta version'] === 2
+  const hasV1Structure = !!(torrent.info.pieces || torrent.info.files || typeof torrent.info.length === 'number')
+  const hasV2Structure = !!torrent.info['file tree']
+
+  // BitTorrent v2 validation (when v2 structures present)
+  if (isV2 || hasV2Structure) {
+    ensure(torrent.info['file tree'], 'info[\'file tree\']')
+    ensure(torrent['piece layers'], 'piece layers')
+  }
+
+  // BitTorrent v1 validation (when v1 structures present)
+  if (hasV1Structure) {
+    ensure(torrent.info.pieces, 'info.pieces')
+
+    if (torrent.info.files) {
+      torrent.info.files.forEach(file => {
+        ensure(typeof file.length === 'number', 'info.files[0].length')
+        ensure(file['path.utf-8'] || file.path, 'info.files[0].path')
+      })
+    } else {
+      ensure(typeof torrent.info.length === 'number', 'info.length')
+    }
   }
 
   const result = {
@@ -141,8 +170,21 @@ async function decodeTorrentFile (torrent) {
     announce: []
   }
 
-  result.infoHashBuffer = await hash(result.infoBuffer)
-  result.infoHash = arr2hex(result.infoHashBuffer)
+  // Auto-detect hash generation based on torrent type
+  const hasFileTree = hasV2Structure
+
+  const shouldGenerateV1 = hasV1Structure
+  const shouldGenerateV2 = isV2 || hasFileTree
+
+  if (shouldGenerateV1) {
+    result.infoHashBuffer = await hash(result.infoBuffer)
+    result.infoHash = arr2hex(result.infoHashBuffer)
+  }
+
+  if (shouldGenerateV2) {
+    result.infoHashV2Buffer = await hash(result.infoBuffer, undefined, 'sha-256')
+    result.infoHashV2 = arr2hex(result.infoHashV2Buffer)
+  }
 
   if (torrent.info.private !== undefined) result.private = !!torrent.info.private
 
@@ -175,7 +217,29 @@ async function decodeTorrentFile (torrent) {
   result.announce = Array.from(new Set(result.announce))
   result.urlList = Array.from(new Set(result.urlList))
 
-  const files = torrent.info.files || [torrent.info]
+  // Create normalized files array for result without modifying original torrent
+  let files
+  if (hasV2Structure && !hasV1Structure) {
+    // Pure v2: flatten file tree for result.files (don't modify torrent.info.files)
+    files = []
+    function processFileTree (tree, currentPath = []) {
+      for (const [name, entry] of Object.entries(tree)) {
+        const fullPath = [...currentPath, name]
+        if (entry.length !== undefined) {
+          files.push({
+            'path.utf-8': fullPath,
+            length: entry.length
+          })
+        } else {
+          processFileTree(entry, fullPath)
+        }
+      }
+    }
+    processFileTree(torrent.info['file tree'])
+  } else {
+    // v1 or hybrid: use existing files structure
+    files = torrent.info.files || [torrent.info]
+  }
   result.files = files.map((file, i) => {
     const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
     return {
@@ -192,7 +256,14 @@ async function decodeTorrentFile (torrent) {
 
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
-  result.pieces = splitPieces(torrent.info.pieces)
+
+  // Simplified pieces handling - fall back to v1 logic for both
+  if (torrent.info.pieces) {
+    result.pieces = splitPieces(torrent.info.pieces)
+  } else {
+    // For v2 torrents without pieces, create empty array
+    result.pieces = []
+  }
 
   return result
 }
