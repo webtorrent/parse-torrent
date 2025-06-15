@@ -16,22 +16,24 @@ import queueMicrotask from 'queue-microtask'
  * @return {Object}
  */
 async function parseTorrent (torrentId, options = {}) {
-  if (typeof torrentId === 'string' && /^(stream-)?magnet:/.test(torrentId)) {
-    // if magnet uri (string)
-    const torrentObj = magnet(torrentId)
+  if (typeof torrentId === 'string') {
+    if (/^(stream-)?magnet:/.test(torrentId)) {
+      // if magnet uri (string)
+      const torrentObj = magnet(torrentId)
 
-    // infoHash (v1) or infoHashV2 (v2) won't be defined if a non-bittorrent magnet is passed
-    if (!torrentObj.infoHash && !torrentObj.infoHashV2) {
-      throw new Error('Invalid torrent identifier')
+      // infoHash (v1) or infoHashV2 (v2) won't be defined if a non-bittorrent magnet is passed
+      if (!torrentObj.infoHash && !torrentObj.infoHashV2) {
+        throw new Error('Invalid torrent identifier')
+      }
+
+      return torrentObj
+    } else if (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId)) {
+      // if info hash v1 (hex/base-32 string)
+      return magnet(`magnet:?xt=urn:btih:${torrentId}`)
+    } else if (/^[a-f0-9]{64}$/i.test(torrentId)) {
+      // if info hash v2 (hex string)
+      return magnet(`magnet:?xt=urn:btmh:1220${torrentId}`)
     }
-
-    return torrentObj
-  } else if (typeof torrentId === 'string' && (/^[a-f0-9]{40}$/i.test(torrentId) || /^[a-z2-7]{32}$/i.test(torrentId))) {
-    // if info hash v1 (hex/base-32 string)
-    return magnet(`magnet:?xt=urn:btih:${torrentId}`)
-  } else if (typeof torrentId === 'string' && /^[a-f0-9]{64}$/i.test(torrentId)) {
-    // if info hash v2 (hex string)
-    return magnet(`magnet:?xt=urn:btmh:1220${torrentId}`)
   } else if (ArrayBuffer.isView(torrentId) && torrentId.length === 20) {
     // if info hash v1 (buffer)
     return magnet(`magnet:?xt=urn:btih:${arr2hex(torrentId)}`)
