@@ -217,10 +217,11 @@ async function decodeTorrentFile (torrent) {
   result.announce = Array.from(new Set(result.announce))
   result.urlList = Array.from(new Set(result.urlList))
 
-  // Process files (simplified to use same logic for v1 and v2)
-  if (isV2 && torrent.info['file tree']) {
-    // Convert v2 file tree to v1-style files array for consistent processing
-    const files = []
+  // Create normalized files array for result without modifying original torrent
+  let files
+  if (hasV2Structure && !hasV1Structure) {
+    // Pure v2: flatten file tree for result.files (don't modify torrent.info.files)
+    files = []
     function processFileTree (tree, currentPath = []) {
       for (const [name, entry] of Object.entries(tree)) {
         const fullPath = [...currentPath, name]
@@ -235,11 +236,10 @@ async function decodeTorrentFile (torrent) {
       }
     }
     processFileTree(torrent.info['file tree'])
-    torrent.info.files = files
+  } else {
+    // v1 or hybrid: use existing files structure
+    files = torrent.info.files || [torrent.info]
   }
-
-  // Use unified file processing logic
-  const files = torrent.info.files || [torrent.info]
   result.files = files.map((file, i) => {
     const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
     return {
