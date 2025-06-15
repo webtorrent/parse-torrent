@@ -11,11 +11,9 @@ import queueMicrotask from 'queue-microtask'
 /**
  * Parse a torrent identifier (magnet uri, .torrent file, info hash)
  * @param  {string|ArrayBufferView|Object} torrentId
- * @param  {Object} options
- * @param  {string} options.hashMode - 'v1', 'v2', or 'both' (default: 'v1')
  * @return {Object}
  */
-async function parseTorrent (torrentId, options = {}) {
+async function parseTorrent (torrentId) {
   if (typeof torrentId === 'string') {
     if (/^(stream-)?magnet:/.test(torrentId)) {
       // if magnet uri (string)
@@ -43,7 +41,7 @@ async function parseTorrent (torrentId, options = {}) {
       return magnet(`magnet:?xt=urn:btmh:1220${arr2hex(torrentId)}`)
     } else {
       // if .torrent file (buffer)
-      return await decodeTorrentFile(torrentId, options) // might throw
+      return await decodeTorrentFile(torrentId) // might throw
     }
   } else if (torrentId && (torrentId.infoHash || torrentId.infoHashV2)) {
     // if parsed torrent (from `parse-torrent` or `magnet-uri`)
@@ -74,7 +72,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
 
   let parsedTorrent
   try {
-    parsedTorrent = await parseTorrent(torrentId, opts)
+    parsedTorrent = await parseTorrent(torrentId)
   } catch (err) {
     // If torrent fails to parse, it could be a Blob, http/https URL or
     // filesystem path, so don't consider it an error yet.
@@ -117,7 +115,7 @@ async function parseTorrentRemote (torrentId, opts, cb) {
 
   async function parseOrThrow (torrentBuf) {
     try {
-      parsedTorrent = await parseTorrent(torrentBuf, opts)
+      parsedTorrent = await parseTorrent(torrentBuf)
     } catch (err) {
       return cb(err)
     }
@@ -129,11 +127,9 @@ async function parseTorrentRemote (torrentId, opts, cb) {
 /**
  * Parse a torrent. Throws an exception if the torrent is missing required fields.
  * @param  {ArrayBufferView|Object} torrent
- * @param  {Object} options
- * @param  {string} options.hashMode - 'v1', 'v2', or 'both' (default: 'v1')
  * @return {Object}        parsed torrent
  */
-async function decodeTorrentFile (torrent, options = {}) {
+async function decodeTorrentFile (torrent) {
   if (ArrayBuffer.isView(torrent)) {
     torrent = bencode.decode(torrent)
   }
@@ -169,15 +165,19 @@ async function decodeTorrentFile (torrent, options = {}) {
     announce: []
   }
 
-  // Generate hashes based on user preference
-  const { hashMode = 'v1' } = options
+  // Auto-detect hash generation based on torrent type
+  const hasFileTree = !!torrent.info['file tree']
+  const hasV1Structure = !!(torrent.info.files || typeof torrent.info.length === 'number')
 
-  if (hashMode === 'v1' || hashMode === 'both') {
+  const shouldGenerateV1 = hasV1Structure
+  const shouldGenerateV2 = isV2 || hasFileTree
+
+  if (shouldGenerateV1) {
     result.infoHashBuffer = await hash(result.infoBuffer)
     result.infoHash = arr2hex(result.infoHashBuffer)
   }
 
-  if (hashMode === 'v2' || hashMode === 'both') {
+  if (shouldGenerateV2) {
     result.infoHashV2Buffer = await hash(result.infoBuffer, undefined, 'sha-256')
     result.infoHashV2 = arr2hex(result.infoHashV2Buffer)
   }
