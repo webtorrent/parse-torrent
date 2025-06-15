@@ -34,15 +34,17 @@ async function parseTorrent (torrentId, options = {}) {
       // if info hash v2 (hex string)
       return magnet(`magnet:?xt=urn:btmh:1220${torrentId}`)
     }
-  } else if (ArrayBuffer.isView(torrentId) && torrentId.length === 20) {
-    // if info hash v1 (buffer)
-    return magnet(`magnet:?xt=urn:btih:${arr2hex(torrentId)}`)
-  } else if (ArrayBuffer.isView(torrentId) && torrentId.length === 32) {
-    // if info hash v2 (buffer)
-    return magnet(`magnet:?xt=urn:btmh:1220${arr2hex(torrentId)}`)
   } else if (ArrayBuffer.isView(torrentId)) {
-    // if .torrent file (buffer)
-    return await decodeTorrentFile(torrentId, options) // might throw
+    if (torrentId.length === 20) {
+      // if info hash v1 (buffer)
+      return magnet(`magnet:?xt=urn:btih:${arr2hex(torrentId)}`)
+    } else if (torrentId.length === 32) {
+      // if info hash v2 (buffer)
+      return magnet(`magnet:?xt=urn:btmh:1220${arr2hex(torrentId)}`)
+    } else {
+      // if .torrent file (buffer)
+      return await decodeTorrentFile(torrentId, options) // might throw
+    }
   } else if (torrentId && (torrentId.infoHash || torrentId.infoHashV2)) {
     // if parsed torrent (from `parse-torrent` or `magnet-uri`)
     if (torrentId.infoHash) {
