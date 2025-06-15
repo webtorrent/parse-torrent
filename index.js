@@ -144,6 +144,7 @@ async function decodeTorrentFile (torrent) {
   if (isV2) {
     // BitTorrent v2 specific validation
     ensure(torrent.info['file tree'], 'info[\'file tree\']')
+    ensure(torrent['piece layers'], 'piece layers')
   } else {
     // BitTorrent v1 validation
     ensure(torrent.info.pieces, 'info.pieces')
