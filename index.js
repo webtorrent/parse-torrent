@@ -140,13 +140,17 @@ async function decodeTorrentFile (torrent) {
   ensure(torrent.info['piece length'], 'info[\'piece length\']')
 
   const isV2 = torrent.info['meta version'] === 2
+  const hasV1Structure = !!(torrent.info.pieces || torrent.info.files || typeof torrent.info.length === 'number')
+  const hasV2Structure = !!torrent.info['file tree']
 
-  if (isV2) {
-    // BitTorrent v2 specific validation
+  // BitTorrent v2 validation (when v2 structures present)
+  if (isV2 || hasV2Structure) {
     ensure(torrent.info['file tree'], 'info[\'file tree\']')
     ensure(torrent['piece layers'], 'piece layers')
-  } else {
-    // BitTorrent v1 validation
+  }
+
+  // BitTorrent v1 validation (when v1 structures present)
+  if (hasV1Structure) {
     ensure(torrent.info.pieces, 'info.pieces')
 
     if (torrent.info.files) {
@@ -167,8 +171,7 @@ async function decodeTorrentFile (torrent) {
   }
 
   // Auto-detect hash generation based on torrent type
-  const hasFileTree = !!torrent.info['file tree']
-  const hasV1Structure = !!(torrent.info.files || typeof torrent.info.length === 'number')
+  const hasFileTree = hasV2Structure
 
   const shouldGenerateV1 = hasV1Structure
   const shouldGenerateV2 = isV2 || hasFileTree
