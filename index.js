@@ -175,18 +175,20 @@ async function decodeTorrentFile (torrent) {
   result.announce = Array.from(new Set(result.announce))
   result.urlList = Array.from(new Set(result.urlList))
 
+  let sum = 0
   const files = torrent.info.files || [torrent.info]
   result.files = files.map((file, i) => {
     const parts = [].concat(result.name, file['path.utf-8'] || file.path || []).map(p => ArrayBuffer.isView(p) ? arr2text(p) : p)
+    sum += file.length
     return {
       path: path.join.apply(null, [path.sep].concat(parts)).slice(1),
       name: parts[parts.length - 1],
       length: file.length,
-      offset: files.slice(0, i).reduce(sumLength, 0)
+      offset: sum - file.length
     }
   })
 
-  result.length = files.reduce(sumLength, 0)
+  result.length = sum
 
   const lastFile = result.files[result.files.length - 1]
 
@@ -241,10 +243,6 @@ function encodeTorrentFile (parsed) {
  */
 function isBlob (obj) {
   return typeof Blob !== 'undefined' && obj instanceof Blob
-}
-
-function sumLength (sum, file) {
-  return sum + file.length
 }
 
 function splitPieces (buf) {
