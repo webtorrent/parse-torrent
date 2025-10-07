@@ -1,3 +1,10 @@
+## [11.0.19](https://github.com/webtorrent/parse-torrent/compare/v11.0.18...v11.0.19) (2025-10-07)
+
+
+### Bug Fixes
+
+* Greatly improve efficiency with torrents with a large number of files ([#198](https://github.com/webtorrent/parse-torrent/issues/198)) ([964e080](https://github.com/webtorrent/parse-torrent/commit/964e0805e1ddb0561b626fab21fda5dd3f82fa3c))
+
 ## [11.0.18](https://github.com/webtorrent/parse-torrent/compare/v11.0.17...v11.0.18) (2025-01-04)
 
 
