@@ -180,6 +180,15 @@ async function decodeTorrentFile (torrent) {
     result.infoHashV2 = arr2hex(result.infoHashV2Buffer)
   }
 
+  // Set version for easy downstream detection
+  if (hasV1Structure && hasV2Structure) {
+    result.version = 'hybrid'
+  } else if (hasV2Structure) {
+    result.version = 'v2'
+  } else {
+    result.version = 'v1'
+  }
+
   if (torrent.info.private !== undefined) result.private = !!torrent.info.private
 
   if (torrent['creation date']) result.created = new Date(torrent['creation date'] * 1000)
