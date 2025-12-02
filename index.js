@@ -301,9 +301,10 @@ function flattenFileTree (tree, currentPath = []) {
   for (const [name, entry] of Object.entries(tree)) {
     const fullPath = [...currentPath, name]
     if (entry.length !== undefined) {
+      // Spread entry to preserve BEP-47 attributes (e.g., attr for padfiles)
       files.push({
-        'path.utf-8': fullPath,
-        length: entry.length
+        ...entry,
+        'path.utf-8': fullPath
       })
     } else {
       files.push(...flattenFileTree(entry, fullPath))
