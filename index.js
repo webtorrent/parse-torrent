@@ -216,21 +216,7 @@ async function decodeTorrentFile (torrent) {
   let files
   if (hasV2Structure && !hasV1Structure) {
     // Pure v2: flatten file tree for result.files (don't modify torrent.info.files)
-    files = []
-    function processFileTree (tree, currentPath = []) {
-      for (const [name, entry] of Object.entries(tree)) {
-        const fullPath = [...currentPath, name]
-        if (entry.length !== undefined) {
-          files.push({
-            'path.utf-8': fullPath,
-            length: entry.length
-          })
-        } else {
-          processFileTree(entry, fullPath)
-        }
-      }
-    }
-    processFileTree(torrent.info['file tree'])
+    files = flattenFileTree(torrent.info['file tree'])
   } else {
     // v1 or hybrid: use existing files structure
     files = torrent.info.files || [torrent.info]
@@ -308,6 +294,22 @@ function encodeTorrentFile (parsed) {
  */
 function isBlob (obj) {
   return typeof Blob !== 'undefined' && obj instanceof Blob
+}
+
+function flattenFileTree (tree, currentPath = []) {
+  const files = []
+  for (const [name, entry] of Object.entries(tree)) {
+    const fullPath = [...currentPath, name]
+    if (entry.length !== undefined) {
+      files.push({
+        'path.utf-8': fullPath,
+        length: entry.length
+      })
+    } else {
+      files.push(...flattenFileTree(entry, fullPath))
+    }
+  }
+  return files
 }
 
 function splitPieces (buf) {
