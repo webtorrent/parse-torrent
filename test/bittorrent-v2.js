@@ -9,6 +9,7 @@ test('Test BitTorrent v2 hash support', async t => {
   const v2Hash = 'a'.repeat(64)
   parsed = await parseTorrent(v2Hash)
   t.equal(parsed.infoHashV2, v2Hash.toLowerCase())
+  t.equal(parsed.infoHash, undefined, 'v2-only should not have v1 infoHash')
   t.equal(parsed.name, undefined)
   t.deepEqual(parsed.announce, [])
 
@@ -42,6 +43,8 @@ test('Parse BitTorrent v2 torrent files', async t => {
   const v2Parsed = await parseTorrent(v2Buf)
   t.ok(v2Parsed.infoHashV2, 'v2 torrent should have v2 hash')
   t.equal(v2Parsed.infoHashV2.length, 64, 'v2 hash should be 64 chars')
+  t.equal(v2Parsed.infoHash, undefined, 'v2-only torrent should not have v1 infoHash')
+  t.equal(v2Parsed.pieces, undefined, 'v2-only torrent should not have pieces')
 
   // Test hybrid torrent (should auto-detect and generate both hashes)
   const hybrid = await parseTorrent(hybridBuf)
@@ -66,6 +69,8 @@ test('Test auto-detection behavior', async t => {
   // Test that v2 torrent auto-detects and generates appropriate hashes
   const parsed = await parseTorrent(torrentBuf)
   t.ok(parsed.infoHashV2, 'v2 torrent should auto-generate v2 hash')
+  t.equal(parsed.infoHash, undefined, 'v2-only should not have v1 infoHash')
+  t.equal(parsed.pieces, undefined, 'v2-only should not have pieces')
 
   t.end()
 })
