@@ -23,6 +23,12 @@ test('Test BitTorrent v2 hash support', async t => {
   parsed = await parseTorrent(magnetV2)
   t.equal(parsed.infoHashV2, v2Hash.toLowerCase(), 'magnet v2 hash should match')
 
+  // hybrid magnet uri (both btih and btmh)
+  const hybridMagnet = 'magnet:?xt=urn:btih:631a31dd0a46257d5078c0dee4e66e26f73e42ac&xt=urn:btmh:1220d8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb'
+  parsed = await parseTorrent(hybridMagnet)
+  t.equal(parsed.infoHash, '631a31dd0a46257d5078c0dee4e66e26f73e42ac', 'hybrid magnet should have v1 infoHash')
+  t.equal(parsed.infoHashV2, 'd8dd32ac93357c368556af3ac1d95c9d76bd0dff6fa9833ecdac3d53134efabb', 'hybrid magnet should have v2 infoHash')
+
   // parsed torrent with both v1 and v2 hashes (hybrid)
   const torrentObjHybrid = {
     infoHash: 'd2474e86c95b19b8bcfdb92bc12c9d44667cfa36',
