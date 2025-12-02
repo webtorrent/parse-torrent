@@ -239,12 +239,9 @@ async function decodeTorrentFile (torrent) {
   result.pieceLength = torrent.info['piece length']
   result.lastPieceLength = ((lastFile.offset + lastFile.length) % result.pieceLength) || result.pieceLength
 
-  // Simplified pieces handling - fall back to v1 logic for both
+  // Only set pieces for v1 torrents; leave undefined for v2-only
   if (torrent.info.pieces) {
     result.pieces = splitPieces(torrent.info.pieces)
-  } else {
-    // For v2 torrents without pieces, create empty array
-    result.pieces = []
   }
 
   return result
