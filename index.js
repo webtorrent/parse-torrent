@@ -148,6 +148,8 @@ async function decodeTorrentFile (torrent) {
 
   if (torrent['creation date']) result.created = new Date(torrent['creation date'] * 1000)
   if (torrent['created by']) result.createdBy = arr2text(torrent['created by'])
+  if (torrent['publisher']) result.publisher = torrent['publisher'].toString()
+  if (torrent['publisher-url']) result.publisherUrl = torrent['publisher-url'].toString()
 
   if (ArrayBuffer.isView(torrent.comment)) result.comment = arr2text(torrent.comment)
 
