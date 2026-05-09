@@ -149,7 +149,7 @@ async function decodeTorrentFile (torrent) {
   if (torrent['creation date']) result.created = new Date(torrent['creation date'] * 1000)
   if (torrent['created by']) result.createdBy = arr2text(torrent['created by'])
 
-  if (ArrayBuffer.isView(torrent.comment)) result.comment = arr2text(torrent.comment)
+  if (ArrayBuffer.isView(torrent['comment.utf-8'] || torrent.comment)) result.comment = arr2text(torrent['comment.utf-8'] || torrent.comment)
 
   // announce and announce-list will be missing if metadata fetched via ut_metadata
   if (Array.isArray(torrent['announce-list']) && torrent['announce-list'].length > 0) {
