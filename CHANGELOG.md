@@ -1,3 +1,11 @@
+## [11.0.20](https://github.com/webtorrent/parse-torrent/compare/v11.0.19...v11.0.20) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update dependency get-stdin to v10 ([#209](https://github.com/webtorrent/parse-torrent/issues/209)) ([14b794e](https://github.com/webtorrent/parse-torrent/commit/14b794ecf9c9b34e09ae6add03b125d3151ee955))
+* **deps:** update dependency uint8-util to ^2.2.6 ([#206](https://github.com/webtorrent/parse-torrent/issues/206)) ([9edc529](https://github.com/webtorrent/parse-torrent/commit/9edc529f6adaed294b006362380129e547494494))
+
 ## [11.0.19](https://github.com/webtorrent/parse-torrent/compare/v11.0.18...v11.0.19) (2025-10-07)
 
 
