@@ -21,10 +21,10 @@
   },
   "type": "module",
   "dependencies": {
-    "bencode": "^4.0.0",
+    "bencode": "^4.0.1",
     "cross-fetch-ponyfill": "^1.0.3",
     "get-stdin": "^10.0.0",
-    "magnet-uri": "^7.0.7",
+    "magnet-uri": "^7.0.8",
     "queue-microtask": "^1.2.3",
     "uint8-util": "^2.2.6"
   },
@@ -34,7 +34,7 @@
     "semantic-release": "25.0.3",
     "standard": "^17.1.2",
     "tape": "5.9.0",
-    "webtorrent-fixtures": "2.0.2",
+    "webtorrent-fixtures": "2.0.3",
     "xtend": "4.0.2"
   },
   "keywords": [
