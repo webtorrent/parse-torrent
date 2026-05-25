@@ -1,3 +1,10 @@
+## [11.0.21](https://github.com/webtorrent/parse-torrent/compare/v11.0.20...v11.0.21) (2026-05-25)
+
+
+### Bug Fixes
+
+* **deps:** update webtorrent ([#215](https://github.com/webtorrent/parse-torrent/issues/215)) ([7d80ece](https://github.com/webtorrent/parse-torrent/commit/7d80ece1ecbd6faab761a7a990a12f4b525c54ac))
+
 ## [11.0.20](https://github.com/webtorrent/parse-torrent/compare/v11.0.19...v11.0.20) (2026-05-25)
 
 
