@@ -61,9 +61,9 @@ async function parseTorrent (torrentId) {
     if (!torrentId.urlList) torrentId.urlList = []
 
     return torrentId
-  } else {
-    throw new Error('Invalid torrent identifier')
   }
+
+  throw new Error('Invalid torrent identifier')
 }
 
 async function parseTorrentRemote (torrentId, opts, cb) {
@@ -142,9 +142,11 @@ async function decodeTorrentFile (torrent) {
   const hasV1Structure = !!(torrent.info.pieces || torrent.info.files || typeof torrent.info.length === 'number')
   const hasV2Structure = !!torrent.info['file tree']
 
+  ensure(hasV1Structure || hasV2Structure, 'info.pieces or info[\'file tree\']')
+
   // BitTorrent v2 validation (when v2 structures present)
   if (hasV2Structure) {
-    ensure(torrent.info['file tree'], 'info[\'file tree\']')
+    ensure(torrent.info['meta version'] === 2, 'info[\'meta version\']')
     ensure(torrent['piece layers'], 'piece layers')
   }
 
@@ -178,6 +180,8 @@ async function decodeTorrentFile (torrent) {
   if (hasV2Structure) {
     result.infoHashV2Buffer = await hash(result.infoBuffer, undefined, 'sha-256')
     result.infoHashV2 = arr2hex(result.infoHashV2Buffer)
+    // carry piece layers through so toTorrentFile can produce a valid v2 file
+    result.pieceLayers = torrent['piece layers']
   }
 
   // Set version for easy downstream detection
@@ -293,6 +297,10 @@ function encodeTorrentFile (parsed) {
 
   if (parsed.comment) {
     torrent.comment = parsed.comment
+  }
+
+  if (parsed.pieceLayers) {
+    torrent['piece layers'] = parsed.pieceLayers
   }
 
   return bencode.encode(torrent)

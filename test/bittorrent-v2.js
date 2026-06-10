@@ -1,6 +1,6 @@
 import fs from 'fs'
 import bencode from 'bencode'
-import parseTorrent from '../index.js'
+import parseTorrent, { toTorrentFile } from '../index.js'
 import test from 'tape'
 
 test('Test BitTorrent v2 hash support', async t => {
@@ -104,6 +104,57 @@ test('Test auto-detection behavior', async t => {
   t.equal(parsed.infoHashV2, 'caf1e1c30e81cb361b9ee167c4aa64228a7fa4fa9f6105232b28ad099f3a302e', 'v2 torrent should have correct auto-generated v2 hash')
   t.equal(parsed.infoHash, undefined, 'v2-only should not have v1 infoHash')
   t.equal(parsed.pieces, undefined, 'v2-only should not have pieces')
+
+  t.end()
+})
+
+test('toTorrentFile round-trips v2 and hybrid torrents', async t => {
+  const v2Parsed = await parseTorrent(fs.readFileSync('./test/torrents/bittorrent-v2-test.torrent'))
+  const v2Again = await parseTorrent(toTorrentFile(v2Parsed))
+  t.equal(v2Again.infoHashV2, v2Parsed.infoHashV2, 'v2 round-trip should preserve infoHashV2')
+
+  const hybridParsed = await parseTorrent(fs.readFileSync('./test/torrents/bittorrent-v2-hybrid-test.torrent'))
+  const hybridAgain = await parseTorrent(toTorrentFile(hybridParsed))
+  t.equal(hybridAgain.infoHash, hybridParsed.infoHash, 'hybrid round-trip should preserve infoHash')
+  t.equal(hybridAgain.infoHashV2, hybridParsed.infoHashV2, 'hybrid round-trip should preserve infoHashV2')
+
+  t.end()
+})
+
+test('Reject malformed torrents', async t => {
+  // garbage string (not a magnet, hash, or file)
+  try {
+    await parseTorrent('this is not a torrent')
+    t.fail('Should have thrown error for garbage string')
+  } catch (err) {
+    t.ok(err.message.includes('Invalid torrent identifier'), 'garbage string should throw')
+  }
+
+  // torrent with neither v1 nor v2 structure
+  try {
+    await parseTorrent(new Uint8Array(bencode.encode({
+      info: { name: 'x', 'piece length': 16384 }
+    })))
+    t.fail('Should have thrown error for structureless torrent')
+  } catch (err) {
+    t.ok(err.message.includes('missing required field'), 'structureless torrent should throw')
+  }
+
+  // file tree with an unsupported meta version
+  try {
+    await parseTorrent(new Uint8Array(bencode.encode({
+      info: {
+        name: 'x',
+        'piece length': 16384,
+        'meta version': 3,
+        'file tree': { x: { '': { length: 5, 'pieces root': new Uint8Array(32) } } }
+      },
+      'piece layers': {}
+    })))
+    t.fail('Should have thrown error for unsupported meta version')
+  } catch (err) {
+    t.ok(err.message.includes('meta version'), 'unsupported meta version should throw')
+  }
 
   t.end()
 })
