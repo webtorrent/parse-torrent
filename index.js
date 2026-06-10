@@ -226,6 +226,11 @@ async function decodeTorrentFile (torrent) {
   if (hasV2Structure && !hasV1Structure) {
     // Pure v2: flatten file tree for result.files (don't modify torrent.info.files)
     files = flattenFileTree(torrent.info['file tree'])
+    // a single root-level file matching the torrent name means single-file
+    // mode (BEP 52); drop the path so it isn't joined as name/name
+    if (files.length === 1 && files[0]['path.utf-8'].length === 1 && files[0]['path.utf-8'][0] === result.name) {
+      files[0]['path.utf-8'] = []
+    }
   } else {
     // v1 or hybrid: use existing files structure
     files = torrent.info.files || [torrent.info]
@@ -305,15 +310,15 @@ function isBlob (obj) {
 function flattenFileTree (tree, currentPath = []) {
   const files = []
   for (const [name, entry] of Object.entries(tree)) {
-    const fullPath = [...currentPath, name]
-    if (entry.length !== undefined) {
-      // Spread entry to preserve BEP-47 attributes (e.g., attr for padfiles)
+    if (name === '') {
+      // BEP 52: a zero-length key holds the file's properties; the path is the
+      // chain of keys leading here. Spread entry to preserve BEP-47 attributes
       files.push({
         ...entry,
-        'path.utf-8': fullPath
+        'path.utf-8': currentPath
       })
     } else {
-      files.push(...flattenFileTree(entry, fullPath))
+      files.push(...flattenFileTree(entry, [...currentPath, name]))
     }
   }
   return files

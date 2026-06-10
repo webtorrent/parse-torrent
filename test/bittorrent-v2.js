@@ -1,4 +1,5 @@
 import fs from 'fs'
+import bencode from 'bencode'
 import parseTorrent from '../index.js'
 import test from 'tape'
 
@@ -62,6 +63,35 @@ test('Parse BitTorrent v2 torrent files', async t => {
     t.ok(Array.isArray(parsed.files), 'Should have files array')
     t.ok(typeof parsed.length === 'number', 'Should have length')
   })
+
+  // v2 file tree should flatten to correct names and paths (BEP 52 stores
+  // file properties under a zero-length key that must not leak into paths)
+  t.equal(v2Parsed.files[0].name, '13.Popsy Team - ViP 2.vob.mp4', 'v2 file should have correct name')
+  t.equal(v2Parsed.files[0].path, 'bittorrent-v2-test/13.Popsy Team - ViP 2.vob.mp4', 'v2 file should have correct path')
+  t.equal(v2Parsed.files[0].length, 27551708, 'v2 file should have correct length')
+
+  t.end()
+})
+
+test('Parse single-file BitTorrent v2 torrent', async t => {
+  // single-file mode: the file tree's only key repeats the torrent name
+  const singleFileV2 = bencode.encode({
+    info: {
+      name: 'single.txt',
+      'piece length': 16384,
+      'meta version': 2,
+      'file tree': { 'single.txt': { '': { length: 5, 'pieces root': new Uint8Array(32) } } }
+    },
+    'piece layers': {}
+  })
+
+  const parsed = await parseTorrent(new Uint8Array(singleFileV2))
+  t.equal(parsed.version, 'v2')
+  t.equal(parsed.files.length, 1)
+  t.equal(parsed.files[0].name, 'single.txt', 'single-file v2 should have correct name')
+  t.equal(parsed.files[0].path, 'single.txt', 'single-file v2 path should not repeat the name')
+  t.equal(parsed.files[0].length, 5)
+  t.equal(parsed.length, 5)
 
   t.end()
 })
