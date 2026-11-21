@@ -4,6 +4,7 @@ import { remote } from '../../index.js'
 import test from 'tape'
 
 fixtures.leaves.parsedTorrent.infoHashBuffer = new Uint8Array(fixtures.leaves.parsedTorrent.infoHashBuffer)
+fixtures.leaves.parsedTorrent.version = 'v1'
 
 test('http url to a torrent file, string', t => {
   t.plan(3)
